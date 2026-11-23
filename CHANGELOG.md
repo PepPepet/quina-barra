@@ -2,7 +2,7 @@
 
 Totes les versions de **Quina Barra!**, de la més nova a la més antiga.
 
-## [1.0] · 24/11/2026
+## [1.0] · 23/11/2026
 
 Primera versió publicada.
 
