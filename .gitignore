@@ -1,0 +1,6 @@
+# L'.exe compilat no va al codi: es publica a les «Releases» de GitHub
+exe/
+# Coses velles i fitxers de treball que no es publiquen
+_obsolets/
+_publicacio/
+*.tmp

@@ -1,0 +1,81 @@
+﻿<Style TargetType="Button">
+  <Setter Property="Foreground" Value="@FG@"/>
+  <Setter Property="Background" Value="@CARD@"/>
+  <Setter Property="BorderBrush" Value="@BORDER@"/>
+  <Setter Property="BorderThickness" Value="1"/>
+  <Setter Property="Padding" Value="14,7"/>
+  <Setter Property="FontSize" Value="13"/>
+  <Setter Property="Cursor" Value="Hand"/>
+  <Setter Property="Template">
+    <Setter.Value>
+      <ControlTemplate TargetType="Button">
+        <Border x:Name="b" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="5" Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="b" Property="Opacity" Value="0.85"/></Trigger>
+          <Trigger Property="IsPressed" Value="True"><Setter TargetName="b" Property="Opacity" Value="0.7"/></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter TargetName="b" Property="Opacity" Value="0.4"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </Setter.Value>
+  </Setter>
+</Style>
+<Style x:Key="Accent" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+  <Setter Property="Background" Value="@ACCENT@"/>
+  <Setter Property="BorderBrush" Value="@ACCENT@"/>
+  <Setter Property="Foreground" Value="@ACCENTFG@"/>
+  <Setter Property="FontWeight" Value="SemiBold"/>
+</Style>
+<Style x:Key="Pla" TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+  <Setter Property="Background" Value="Transparent"/>
+  <Setter Property="BorderBrush" Value="Transparent"/>
+  <Setter Property="Padding" Value="8,4"/>
+  <Setter Property="Foreground" Value="@SUB@"/>
+</Style>
+<Style TargetType="ContextMenu">
+  <Setter Property="Template">
+    <Setter.Value>
+      <ControlTemplate TargetType="ContextMenu">
+        <Border Background="@BG@" BorderBrush="@BORDER@" BorderThickness="1" CornerRadius="8" Padding="4">
+          <ItemsPresenter/>
+        </Border>
+      </ControlTemplate>
+    </Setter.Value>
+  </Setter>
+</Style>
+<Style TargetType="MenuItem">
+  <Setter Property="Template">
+    <Setter.Value>
+      <ControlTemplate TargetType="MenuItem">
+        <Border x:Name="b" Background="Transparent" CornerRadius="5" Padding="14,7" MinWidth="190">
+          <ContentPresenter ContentSource="Header" TextBlock.Foreground="@FG@" TextBlock.FontSize="13"/>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsHighlighted" Value="True"><Setter TargetName="b" Property="Background" Value="@HOVER@"/></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter TargetName="b" Property="Opacity" Value="0.4"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate>
+    </Setter.Value>
+  </Setter>
+</Style>
+<Style TargetType="ScrollBar">
+  <Setter Property="Width" Value="6"/>
+  <Setter Property="MinWidth" Value="6"/>
+  <Setter Property="Template">
+    <Setter.Value>
+      <ControlTemplate TargetType="ScrollBar">
+        <Track x:Name="PART_Track" IsDirectionReversed="True">
+          <Track.Thumb>
+            <Thumb>
+              <Thumb.Template>
+                <ControlTemplate TargetType="Thumb"><Border CornerRadius="3" Background="@SUB@" Opacity="0.45"/></ControlTemplate>
+              </Thumb.Template>
+            </Thumb>
+          </Track.Thumb>
+        </Track>
+      </ControlTemplate>
+    </Setter.Value>
+  </Setter>
+</Style>

@@ -1,0 +1,4 @@
+# Finals de línia de Windows per als fitxers de text; les imatges i les icones, tal qual
+* text=auto eol=crlf
+*.png binary
+*.ico binary
