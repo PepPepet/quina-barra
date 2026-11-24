@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
+﻿// Quina Barra! · versió 1.2 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Finestra de detall: capçalera, llocs desats, ara, resum, hores, dies, rajoles, mar i radar.
 using System;
@@ -54,9 +54,9 @@ namespace TempsBarra
             return "<Border x:Name=\"T" + nom + "\" Background=\"@CARD@\" BorderBrush=\"@BORDER@\" BorderThickness=\"1\" CornerRadius=\"8\" Margin=\"4\" Padding=\"14,12\" Height=\"150\" Cursor=\"Hand\" ToolTip=\"" + XmlText(T("rajola-ajuda")) + "\">\n" +
                 "  <DockPanel>\n" +
                 "    <StackPanel DockPanel.Dock=\"Top\" Orientation=\"Horizontal\" Margin=\"0,0,0,6\" HorizontalAlignment=\"Center\">\n" +
-                "      <Viewbox Width=\"14\" Height=\"14\" VerticalAlignment=\"Center\" Margin=\"0,0,7,0\"><Path Width=\"14\" Height=\"14\" Data=\"" + glif + "\" Stroke=\"@SUB@\" StrokeThickness=\"1.3\" StrokeStartLineCap=\"Round\" StrokeEndLineCap=\"Round\" StrokeLineJoin=\"Round\"/></Viewbox>\n" +
+                "      <Viewbox Width=\"14\" Height=\"14\" VerticalAlignment=\"Center\" Margin=\"0,0,7,0\" FlowDirection=\"LeftToRight\"><Path Width=\"14\" Height=\"14\" Data=\"" + glif + "\" Stroke=\"@SUB@\" StrokeThickness=\"1.3\" StrokeStartLineCap=\"Round\" StrokeEndLineCap=\"Round\" StrokeLineJoin=\"Round\"/></Viewbox>\n" +
                 "      <TextBlock Text=\"" + XmlText(titol) + "\" FontSize=\"12.5\" Foreground=\"@SUB@\" VerticalAlignment=\"Center\"/>\n" +
-                "      <TextBlock Text=\"&#xE76C;\" FontFamily=\"Segoe Fluent Icons, Segoe MDL2 Assets\" FontSize=\"9\" Foreground=\"@SUB@\" VerticalAlignment=\"Center\" Margin=\"6,1,0,0\" Opacity=\"0.7\"/>\n" +
+                "      <TextBlock Text=\"" + FletxaEndavant() + "\" FontFamily=\"Segoe Fluent Icons, Segoe MDL2 Assets\" FontSize=\"9\" Foreground=\"@SUB@\" VerticalAlignment=\"Center\" Margin=\"6,1,0,0\" Opacity=\"0.7\"/>\n" +
                 "    </StackPanel>\n" +
                 "    <Grid x:Name=\"R" + nom + "\"/>\n" +
                 "  </DockPanel>\n" +
@@ -76,6 +76,7 @@ namespace TempsBarra
                 Rajola("Pressio", "M2,11 A5.5,5.5 0 1 1 12,11 M7,8 L9.5,5", T("bloc-pressio"));
             string xaml = Recurs("Detall.xaml").Replace("@ESTILS@", Recurs("Estils.xaml")).Replace("@RAJOLES@", rajoles);
             Window w = (Window)LlegeixXaml(AmbPaleta(xaml, p));
+            Direccio(w);
             Det g = new Det();
             g.W = w; g.P = p;
             g.FLloc = g.F<TextBlock>("FLloc"); g.FHora = g.F<TextBlock>("FHora"); g.BActualitza = g.F<Button>("BActualitza");
@@ -95,6 +96,14 @@ namespace TempsBarra
             g.TMar = g.F<Border>("TMar"); g.RMar = g.F<Grid>("RMar");
             g.PastScroll = g.F<ScrollViewer>("PastScroll"); g.Pastilles = g.F<StackPanel>("Pastilles"); g.PastFletxes = g.F<StackPanel>("PastFletxes");
             g.BPEsq = g.F<Button>("BPEsq"); g.BPDre = g.F<Button>("BPDre");
+
+            // Dreta a esquerra: les fletxes de les pastilles i la d'enrere es giren; el carrusel d'hores, el mapa i les marques del radar no
+            if (Dreta)
+            {
+                g.BPEsq.Content = FletxaEnrere(); g.BPDre.Content = FletxaEndavant();
+                g.BEnrere.Content = ((char)0xE72A).ToString();
+            }
+            Fixa(g.HoresScroll); Fixa(g.BHEsq.Parent as FrameworkElement); Fixa(g.MapaVora); Fixa(g.Marques);
 
             // Rajoles clicables: obren la seva pàgina de detall
             foreach (string nom in new[] { "Pluja", "Vent", "Sol", "UV", "Aire", "Visib", "Humitat", "Pressio", "Mar" })
@@ -251,7 +260,7 @@ namespace TempsBarra
             g.RVent.Children.Clear();
             Grid gr = new Grid(); gr.HorizontalAlignment = HorizontalAlignment.Center; gr.VerticalAlignment = VerticalAlignment.Center;
             gr.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto }); gr.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            Canvas cv = new Canvas(); cv.Width = 70; cv.Height = 70; cv.Margin = new Thickness(0, 0, 12, 0);
+            Canvas cv = Fixa(new Canvas()); cv.Width = 70; cv.Height = 70; cv.Margin = new Thickness(0, 0, 12, 0);
             Ellipse cer = new Ellipse(); cer.Width = 62; cer.Height = 62; cer.Stroke = Pinzell(p["BORDER"]); cer.StrokeThickness = 2;
             Canvas.SetLeft(cer, 4); Canvas.SetTop(cer, 4); cv.Children.Add(cer);
             foreach (object[] l in new[] { new object[] { T("punt-0"), 31.0, -3.0 }, new object[] { T("punt-4"), 64.0, 26.0 }, new object[] { T("punt-8"), 31.5, 55.0 }, new object[] { T("punt-12"), -3.0, 26.0 } })
@@ -281,7 +290,7 @@ namespace TempsBarra
                 Func<double, double> posY = hh => hh >= 0 ? hz - esc * hh : hz - escNit * hh;
                 List<string> punts = new List<string>();
                 for (int x = 0; x <= W; x += 4) { double hh = x / W * 24; punts.Add(x.ToString("0.#", Inv) + "," + posY(alcada(hh)).ToString("0.#", Inv)); }
-                Canvas cvS = new Canvas(); cvS.Width = W; cvS.Height = H; cvS.HorizontalAlignment = HorizontalAlignment.Center;
+                Canvas cvS = Fixa(new Canvas()); cvS.Width = W; cvS.Height = H; cvS.HorizontalAlignment = HorizontalAlignment.Center;
                 cvS.Children.Add(Cami("M " + string.Join(" L ", punts), p["SUB"], 1.6));
                 cvS.Children.Add(Cami("M0," + N(hz) + " L" + N(W) + "," + N(hz), p["BORDER"], 1.2));
                 double ara = d.Ara.TimeOfDay.TotalHours;
@@ -291,8 +300,8 @@ namespace TempsBarra
                 Canvas.SetLeft(sol, sx - 6); Canvas.SetTop(sol, sy - 6); cvS.Children.Add(sol);
                 StackPanel spS = new StackPanel(); spS.HorizontalAlignment = HorizontalAlignment.Center; spS.VerticalAlignment = VerticalAlignment.Center; spS.Width = W;
                 spS.Children.Add(cvS);
-                Grid fila = new Grid(); fila.Margin = new Thickness(0, 6, 0, 0);
-                TextBlock tS = Text(T("sol-surt", d.Sortida.ToString("H:mm", Inv)), 13, p["FG"], "SemiBold");
+                Grid fila = Fixa(new Grid()); fila.Margin = new Thickness(0, 6, 0, 0);   // sortida a l'esquerra, com la corba
+                TextBlock tS = Text(T("sol-surt", d.Sortida.ToString("H:mm", Inv)), 13, p["FG"], "SemiBold"); tS.HorizontalAlignment = HorizontalAlignment.Left;
                 TextBlock tP = Text(T("sol-es-pon", d.Posta.ToString("H:mm", Inv)), 13, p["FG"], "SemiBold"); tP.HorizontalAlignment = HorizontalAlignment.Right;
                 fila.Children.Add(tS); fila.Children.Add(tP); spS.Children.Add(fila);
                 g.RSol.Children.Add(spS);
@@ -301,7 +310,7 @@ namespace TempsBarra
             // Índex UV
             double uv = d.UV ?? 0;
             int idx = NivellUV(uv);
-            StackPanel puntsUV = new StackPanel(); puntsUV.Orientation = Orientation.Horizontal; puntsUV.Margin = new Thickness(8, 8, 0, 0);
+            StackPanel puntsUV = Fixa(new StackPanel()); puntsUV.Orientation = Orientation.Horizontal; puntsUV.Margin = new Thickness(8, 8, 0, 0);
             for (int i = 0; i < 5; i++)
             {
                 Ellipse e = new Ellipse();
@@ -317,7 +326,7 @@ namespace TempsBarra
             {
                 Ica a = d.Aire;
                 double amp = 172.0;
-                Grid barra = new Grid(); barra.Height = 14; barra.Margin = new Thickness(0, 10, 0, 0); barra.Width = amp;
+                Grid barra = Fixa(new Grid()); barra.Height = 14; barra.Margin = new Thickness(0, 10, 0, 0); barra.Width = amp;
                 StackPanel tira = new StackPanel(); tira.Orientation = Orientation.Horizontal; tira.VerticalAlignment = VerticalAlignment.Center;
                 for (int i = 0; i < 6; i++) { Rectangle r = new Rectangle(); r.Width = amp / 6; r.Height = 6; r.Fill = Pinzell(IcaColors[i]); tira.Children.Add(r); }
                 barra.Children.Add(tira);
@@ -347,7 +356,7 @@ namespace TempsBarra
             g.RPressio.Children.Clear();
             double pr = d.Pressio ?? 0;
             double f = Math.Max(0.0, Math.Min(1.0, (pr - 970.0) / 80.0));
-            Canvas cvP = new Canvas(); cvP.Width = 96; cvP.Height = 84; cvP.HorizontalAlignment = HorizontalAlignment.Center;
+            Canvas cvP = Fixa(new Canvas()); cvP.Width = 96; cvP.Height = 84; cvP.HorizontalAlignment = HorizontalAlignment.Center;
             cvP.Children.Add(Cami(Arc(48, 46, 38, -135, 135), p["BORDER"], 7));
             if (f > 0.01) cvP.Children.Add(Cami(Arc(48, 46, 38, -135, -135 + 270 * f), p["ACCENT"], 7));
             TextBlock tv = Text(pr.ToString("N0", Ca), 20, p["FG"], "SemiBold"); tv.Width = 96; tv.TextAlignment = TextAlignment.Center;
@@ -389,9 +398,10 @@ namespace TempsBarra
                 Viewbox ic = IconaCaixa(x.Categoria, true, 28); Grid.SetColumn(ic, 1); gr.Children.Add(ic);
                 TextBlock pl = Text(x.Pluja >= 10 ? x.Pluja + " %" : "", 12, p["BLAU"], "SemiBold"); pl.VerticalAlignment = VerticalAlignment.Center; pl.TextAlignment = TextAlignment.Center;
                 Grid.SetColumn(pl, 2); gr.Children.Add(pl);
-                TextBlock tmin = Text(Graus(x.Min) + "°", 13.5, p["SUB"]); tmin.VerticalAlignment = VerticalAlignment.Center; tmin.TextAlignment = TextAlignment.Right;
-                Grid.SetColumn(tmin, 3); gr.Children.Add(tmin);
-                Grid fons = new Grid(); fons.Height = 6; fons.Width = ampBarra; fons.VerticalAlignment = VerticalAlignment.Center;
+                // La barra va sempre de fred (esquerra) a calor (dreta); en una llengua RTL, la mínima i la màxima s'intercanvien de columna
+                TextBlock tmin = Text(Graus(x.Min) + "°", 13.5, p["SUB"]); tmin.VerticalAlignment = VerticalAlignment.Center; tmin.TextAlignment = Dreta ? TextAlignment.Left : TextAlignment.Right;
+                Grid.SetColumn(tmin, Dreta ? 5 : 3); gr.Children.Add(tmin);
+                Grid fons = Fixa(new Grid()); fons.Height = 6; fons.Width = ampBarra; fons.VerticalAlignment = VerticalAlignment.Center;
                 Rectangle r0 = new Rectangle(); r0.RadiusX = 3; r0.RadiusY = 3; r0.Fill = Pinzell(p["BORDER"]); fons.Children.Add(r0);
                 Rectangle r1 = new Rectangle(); r1.RadiusX = 3; r1.RadiusY = 3; r1.HorizontalAlignment = HorizontalAlignment.Left;
                 double x0 = ((x.Min ?? 0) - minG) / rang * ampBarra, x1 = ((x.Max ?? 0) - minG) / rang * ampBarra;
@@ -402,7 +412,8 @@ namespace TempsBarra
                 r1.Fill = gb; fons.Children.Add(r1);
                 Grid.SetColumn(fons, 4); gr.Children.Add(fons);
                 TextBlock tmax = Text(Graus(x.Max) + "°", 13.5, p["FG"], "SemiBold"); tmax.VerticalAlignment = VerticalAlignment.Center;
-                Grid.SetColumn(tmax, 5); gr.Children.Add(tmax);
+                if (Dreta) tmax.TextAlignment = TextAlignment.Right;
+                Grid.SetColumn(tmax, Dreta ? 3 : 5); gr.Children.Add(tmax);
                 g.Dies.Children.Add(gr);
             }
         }
@@ -419,7 +430,7 @@ namespace TempsBarra
             {
                 Dades d = DadesLloc(principal, forca);
                 gIcona.Child = Icona(d.Categoria, d.Dia, clarBarra);
-                gTemp.Text = Graus(d.Temp) + " °C";
+                gTemp.Text = TextDireccio(Graus(d.Temp) + " °C");
                 gDesc.Text = d.Estat;
                 giny.ToolTip = T("giny-ajuda", Nom(principal), Graus(d.Temp), d.Estat.ToLower());
             }
@@ -443,7 +454,7 @@ namespace TempsBarra
                 Dades d = DadesLloc(c, forca);
                 dades = d;
                 g.FIcona.Child = Icona(d.Categoria, d.Dia, ModeClar());
-                g.FTemp.Text = Graus(d.Temp) + "°";
+                g.FTemp.Text = TextDireccio(Graus(d.Temp) + "°");
                 g.FDesc.Text = d.Estat;
                 g.FSensacio.Text = T("ara-sensacio", Graus(d.Sensacio));
                 g.FMaxMin.Text = T("ara-maxmin", Graus(d.Max), Graus(d.Min));
@@ -510,12 +521,13 @@ namespace TempsBarra
                 b.MouseMove += (s, e) => PastillaMou();
                 b.PreviewMouseLeftButtonUp += PastillaAmunt;
                 b.LostMouseCapture += (s, e) => { if (arrB == s) { arrB = null; if (arrMou) ActualitzaPastilles(); } };
-                ContextMenu cm = new ContextMenu();
+                ContextMenu cm = new ContextMenu(); Direccio(cm);
                 cm.Style = (Style)g.W.FindResource(typeof(ContextMenu));
                 cm.Items.Add(ElementMenu(T("lloc-fes-principal"), "principal", i, i > 0));
                 cm.Items.Add(ElementMenu(T("lloc-canvia-nom-menu"), "nom", i));
-                cm.Items.Add(ElementMenu(T("lloc-mou-esquerra"), "esquerra", i, i > 0));
-                cm.Items.Add(ElementMenu(T("lloc-mou-dreta"), "dreta", i, i < llocs.Count - 1));
+                // «Mou a l'esquerra» és a l'esquerra de la pantalla: en una llengua RTL, cap al final de la llista
+                cm.Items.Add(ElementMenu(T("lloc-mou-esquerra"), Dreta ? "dreta" : "esquerra", i, Dreta ? i < llocs.Count - 1 : i > 0));
+                cm.Items.Add(ElementMenu(T("lloc-mou-dreta"), Dreta ? "esquerra" : "dreta", i, Dreta ? i > 0 : i < llocs.Count - 1));
                 cm.Items.Add(ElementMenu(T("lloc-treu"), "treu", i, llocs.Count > 1));
                 cm.Opened += (s, e) => menuObert = true;
                 cm.Closed += (s, e) => { menuObert = false; if (det.W.IsVisible) det.W.Activate(); };

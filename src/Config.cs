@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
+﻿// Quina Barra! · versió 1.2 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Configuració, registre, municipis de l'Idescat i tema de Windows.
 using System;
@@ -40,13 +40,13 @@ namespace TempsBarra
             Environment.GetEnvironmentVariable("APPDATA") ?? Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "QuinaBarra");
         public static readonly string FitxerConf = Path.Combine(Carpeta, "config.json");
         public static readonly string FitxerMuns = Path.Combine(Carpeta, "municipis-idescat.json");
-        public const string Versio = "1.1";
+        public const string Versio = "1.2";
         public const string UrlAutor = "https://peppayo.com";
         public const string UrlCodi = "https://github.com/PepPepet";
         public const int Minuts = 15;
         public static readonly string[] Models = { "meteofrance_seamless", "icon_seamless", "ecmwf_ifs025" };
         public static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
-        public static readonly CultureInfo Ca = CultureInfo.GetCultureInfo("ca-ES");
+        public static CultureInfo Ca { get { return CulturaLlengua; } }   // format dels números en la llengua del giny (abans, sempre català)
         static readonly UTF8Encoding Utf8SenseBom = new UTF8Encoding(false);
 
         // Mode de prova (/prova): no escriu la configuració ni el registre

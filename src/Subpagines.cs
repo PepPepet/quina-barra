@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
+﻿// Quina Barra! · versió 1.2 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Pàgines de detall de les rajoles, «Quant a» i el mapa de radar.
 using System;
@@ -69,7 +69,7 @@ namespace TempsBarra
         static void GraficHores(StackPanel sp, IEnumerable<ElGrafic> elements, bool pastilla = true)
         {
             Dictionary<string, string> p = det.P;
-            ScrollViewer sv = new ScrollViewer();
+            ScrollViewer sv = Fixa(new ScrollViewer());   // el temps va sempre d'esquerra a dreta
             sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden; sv.VerticalScrollBarVisibility = ScrollBarVisibility.Disabled; sv.Margin = new Thickness(0, 14, 0, 0);
             sv.PreviewMouseWheel += RodaHoritzontal;
             StackPanel fila = new StackPanel(); fila.Orientation = Orientation.Horizontal;
@@ -105,7 +105,7 @@ namespace TempsBarra
             }
             sv.Content = fila;
             // Fletxes ‹ › per desplaçar el gràfic amb el ratolí
-            StackPanel fletxes = new StackPanel(); fletxes.Orientation = Orientation.Horizontal; fletxes.HorizontalAlignment = HorizontalAlignment.Right; fletxes.Margin = new Thickness(0, 8, 0, -8);
+            StackPanel fletxes = Fixa(new StackPanel()); fletxes.Orientation = Orientation.Horizontal; fletxes.HorizontalAlignment = HorizontalAlignment.Right; fletxes.Margin = new Thickness(0, 8, 0, -8);
             foreach (int pas in new[] { -250, 250 })
             {
                 Button b = new Button();
@@ -189,7 +189,7 @@ namespace TempsBarra
                         Func<double, double> posY = hores => { double a = Math.Cos(2 * Math.PI * (hores - migdia) / 24) - bas; return a >= 0 ? hz - esc * a : hz - escNit * a; };
                         List<string> punts = new List<string>();
                         for (double x = 0.0; x <= W; x += 3) punts.Add(x.ToString("0.#", Inv) + "," + posY(x / W * 24).ToString("0.#", Inv));
-                        Canvas cv = new Canvas(); cv.Width = W; cv.Height = H; cv.ClipToBounds = true; cv.HorizontalAlignment = HorizontalAlignment.Center;
+                        Canvas cv = Fixa(new Canvas()); cv.Width = W; cv.Height = H; cv.ClipToBounds = true; cv.HorizontalAlignment = HorizontalAlignment.Center;
                         Path area = Cami("M 0," + N(H) + " L " + string.Join(" L ", punts) + " L " + N(W) + "," + N(H) + " Z", null, 0, p["BORDER"]);
                         cv.Children.Add(area);
                         cv.Children.Add(Cami("M " + string.Join(" L ", punts), p["SUB"], 2));
@@ -200,7 +200,7 @@ namespace TempsBarra
                         Canvas.SetLeft(sol, ara / 24 * W - 11); Canvas.SetTop(sol, posY(ara) - 11);
                         cv.Children.Add(sol);
                         sp.Children.Add(cv);
-                        UniformGrid gr = new UniformGrid(); gr.Columns = 4; gr.Margin = new Thickness(0, 14, 0, 0);
+                        UniformGrid gr = Fixa(new UniformGrid()); gr.Columns = 4; gr.Margin = new Thickness(0, 14, 0, 0);   // alba a l'esquerra, com la corba
                         foreach (KeyValuePair<string, DateTime?> par in new[] {
                             new KeyValuePair<string, DateTime?>(T("sol-alba"), d.Alba), new KeyValuePair<string, DateTime?>(T("sol-sortida"), d.Sortida),
                             new KeyValuePair<string, DateTime?>(T("sol-posta"), d.Posta), new KeyValuePair<string, DateTime?>(T("sol-capvespre"), d.Capvespre) })
@@ -247,7 +247,7 @@ namespace TempsBarra
                         sp.Children.Add(Text(T("aire-index"), 12.5, p["SUB"]));
                         sp.Children.Add(Text(IcaNom(a.Categoria), 28, p["FG"], "SemiBold"));
                         double amp = 400.0;
-                        Grid barra = new Grid(); barra.Height = 16; barra.Margin = new Thickness(0, 10, 0, 6); barra.Width = amp; barra.HorizontalAlignment = HorizontalAlignment.Left;
+                        Grid barra = Fixa(new Grid()); barra.Height = 16; barra.Margin = new Thickness(0, 10, 0, 6); barra.Width = amp; barra.HorizontalAlignment = HorizontalAlignment.Left;
                         StackPanel tira = new StackPanel(); tira.Orientation = Orientation.Horizontal; tira.VerticalAlignment = VerticalAlignment.Center;
                         for (int i = 0; i < 6; i++) { Rectangle r = new Rectangle(); r.Width = amp / 6; r.Height = 7; r.Fill = Pinzell(IcaColors[i]); tira.Children.Add(r); }
                         barra.Children.Add(tira);
@@ -311,13 +311,13 @@ namespace TempsBarra
                         string tend = T(d3 > 1 ? "pressio-pujant" : (d3 < -1 ? "pressio-baixant" : "pressio-estable"));
                         Xifra(sp, T("ara-mateix"), pr.ToString("N0", Ca) + " hPa", tend);
                         double amp = 400.0;
-                        Grid fons = new Grid(); fons.Width = amp; fons.Height = 8; fons.HorizontalAlignment = HorizontalAlignment.Left; fons.Margin = new Thickness(0, 10, 0, 2);
+                        Grid fons = Fixa(new Grid()); fons.Width = amp; fons.Height = 8; fons.HorizontalAlignment = HorizontalAlignment.Left; fons.Margin = new Thickness(0, 10, 0, 2);
                         Border b0 = new Border(); b0.CornerRadius = new CornerRadius(4); b0.Background = Pinzell(p["BORDER"]); fons.Children.Add(b0);
                         Border b1 = new Border(); b1.CornerRadius = new CornerRadius(4); b1.Background = Pinzell(p["ACCENT"]); b1.HorizontalAlignment = HorizontalAlignment.Left;
                         b1.Width = Math.Max(8.0, Math.Min(1.0, Math.Max(0.0, (pr - 970.0) / 80.0)) * amp); fons.Children.Add(b1);
                         sp.Children.Add(fons);
-                        Grid esc = new Grid(); esc.Width = amp; esc.HorizontalAlignment = HorizontalAlignment.Left;
-                        TextBlock e1 = Text(T("pressio-escala-baixa", "970"), 11, p["SUB"]); esc.Children.Add(e1);
+                        Grid esc = Fixa(new Grid()); esc.Width = amp; esc.HorizontalAlignment = HorizontalAlignment.Left;
+                        TextBlock e1 = Text(T("pressio-escala-baixa", "970"), 11, p["SUB"]); e1.HorizontalAlignment = HorizontalAlignment.Left; esc.Children.Add(e1);
                         TextBlock e2 = Text(T("pressio-escala-alta", 1050.0.ToString("N0", Ca)), 11, p["SUB"]); e2.HorizontalAlignment = HorizontalAlignment.Right; esc.Children.Add(e2);
                         sp.Children.Add(esc);
                         GraficHores(sp, d.Hores.Select(h => new ElGrafic((h.Pressio - 990) / 50, p["ACCENT"], Math.Round(h.Pressio).ToString("N0", Ca), h.Etiqueta)).ToList());
@@ -381,8 +381,9 @@ namespace TempsBarra
             bL.Content = contL; bL.HorizontalContentAlignment = HorizontalAlignment.Stretch;
             bL.Click += (s, e) =>
             {
-                ContextMenu cm = new ContextMenu();
+                ContextMenu cm = new ContextMenu(); Direccio(cm);
                 cm.Style = (Style)det.W.FindResource(typeof(ContextMenu));
+                cm.MaxHeight = 440;   // amb moltes llengües, el menú es desplaça
                 foreach (string c in codis)
                 {
                     string codi = c;
@@ -394,7 +395,9 @@ namespace TempsBarra
                 cm.IsOpen = true;
             };
             spL.Children.Add(bL);
-            if (Llengua != LlenguaBase)
+            // Nota de les traduccions fetes amb Claude: no surt en català (l'original d'en Pep) ni en anglès,
+            // ni si la llengua no la té traduïda (llavors no se sap qui ha fet la traducció)
+            if (Llengua != "ca" && Llengua != LlenguaBase && TeTextPropi("llengua-nota"))
             {
                 TextBlock nt = Text(T("llengua-nota"), 12.5, p["SUB"]); nt.TextWrapping = TextWrapping.Wrap; nt.Margin = new Thickness(0, 10, 0, 0);
                 spL.Children.Add(nt);
@@ -409,7 +412,7 @@ namespace TempsBarra
             StackPanel cap = new StackPanel(); cap.Orientation = Orientation.Horizontal;
             Viewbox ic = IconaCaixa("mig", true, 44); ic.Margin = new Thickness(0, 0, 12, 0); cap.Children.Add(ic);
             StackPanel tt = new StackPanel(); tt.VerticalAlignment = VerticalAlignment.Center;
-            tt.Children.Add(Text("Quina Barra!", 22, p["FG"], "SemiBold"));
+            tt.Children.Add(Text(Dreta ? "Quina Barra!\u200E" : "Quina Barra!", 22, p["FG"], "SemiBold"));   // la LRM manté el «!» al final
             tt.Children.Add(Text(T("quanta-versio", Versio), 12.5, p["SUB"]));
             cap.Children.Add(tt); sp.Children.Add(cap);
             TextBlock ds = Text(T("quanta-descripcio"), 13.5, p["FG"]); ds.TextWrapping = TextWrapping.Wrap; ds.Margin = new Thickness(0, 12, 0, 0);
@@ -446,7 +449,17 @@ namespace TempsBarra
             chk.IsChecked = EngegaAmbWindows();
             chk.Checked += (s, e) => PosaEngegaAmbWindows(true);
             chk.Unchecked += (s, e) => PosaEngegaAmbWindows(false);
-            spA.Children.Add(chk);
+            if (Dreta)
+            {
+                // De dreta a esquerra: la casella es dibuixa d'esquerra a dreta (si no, la marca surt deformada) i el text va a part
+                chk.Content = null; Fixa(chk); chk.Margin = new Thickness(6, 0, 6, 0); chk.VerticalAlignment = VerticalAlignment.Center;
+                StackPanel fila = new StackPanel(); fila.Orientation = Orientation.Horizontal; fila.Margin = new Thickness(0, 14, 0, 0);
+                TextBlock tx = Text(T("quanta-engega"), 13.5, p["FG"]); tx.VerticalAlignment = VerticalAlignment.Center; tx.Margin = new Thickness(0, 0, 6, 0); tx.Cursor = Cursors.Hand;
+                tx.MouseLeftButtonUp += (s, e) => chk.IsChecked = chk.IsChecked != true;
+                fila.Children.Add(chk); fila.Children.Add(tx);
+                spA.Children.Add(fila);
+            }
+            else spA.Children.Add(chk);
 
             StackPanel sp2 = Targeta();
             sp2.Children.Add(Text(T("quanta-fonts"), 15, p["FG"], "SemiBold"));
@@ -557,7 +570,7 @@ namespace TempsBarra
                 byte[] bytes;
                 using (WebClient wc = new WebClient())
                 {
-                    wc.Headers.Add("User-Agent", "QuinaBarra/1.1 (giny del temps per a Windows)");
+                    wc.Headers.Add("User-Agent", "QuinaBarra/1.2 (giny del temps per a Windows)");
                     bytes = wc.DownloadData("https://tile.openstreetmap.org/" + z + "/" + x + "/" + y + ".png");
                 }
                 MemoryStream ms = new MemoryStream(bytes);

@@ -1,11 +1,12 @@
 ﻿# Quina Barra! · compila QuinaBarra.exe amb el compilador de C# del .NET Framework que porta el Windows.
 # Ús: powershell -NoProfile -ExecutionPolicy Bypass -File build.ps1
-# Sortida: ..\exe\QuinaBarra.exe. No cal instal·lar res ni baixar res.
+# Sortida: ..\exe\QuinaBarra.exe (o la carpeta de -Sortida, per provar sense tancar el giny). No cal instal·lar res ni baixar res.
+param([string]$Sortida)
 $ErrorActionPreference = 'Stop'
 
 $src     = $PSScriptRoot
 $arrel   = Split-Path $src -Parent
-$sortida = Join-Path $arrel 'exe'
+$sortida = if ($Sortida) { $Sortida } else { Join-Path $arrel 'exe' }
 $fw      = 'C:\Windows\Microsoft.NET\Framework64\v4.0.30319'
 $wpf     = Join-Path $fw 'WPF'
 $csc     = Join-Path $fw 'csc.exe'
@@ -32,6 +33,8 @@ $opcions = @(
 foreach ($x in Get-ChildItem (Join-Path $src 'xaml') -Filter *.xaml) { $opcions += "/resource:$($x.FullName),TempsBarra.$($x.Name)" }
 # Els textos de cada llengua també (TempsBarra.textos.<codi>.json)
 foreach ($t in Get-ChildItem (Join-Path $src 'textos') -Filter *.json) { $opcions += "/resource:$($t.FullName),TempsBarra.textos.$($t.Name)" }
+# Les regles de plural de CLDR i MediaWiki (TempsBarra.plurals.<nom>.xml)
+foreach ($p in Get-ChildItem (Join-Path $src 'plurals') -Filter *.xml) { $opcions += "/resource:$($p.FullName),TempsBarra.plurals.$($p.Name)" }
 $opcions += (Get-ChildItem $src -Filter *.cs | ForEach-Object { $_.FullName })
 
 & $csc @opcions

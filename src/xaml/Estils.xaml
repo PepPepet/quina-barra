@@ -39,7 +39,7 @@
     <Setter.Value>
       <ControlTemplate TargetType="ContextMenu">
         <Border Background="@BG@" BorderBrush="@BORDER@" BorderThickness="1" CornerRadius="8" Padding="4">
-          <ItemsPresenter/>
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"><ItemsPresenter/></ScrollViewer>
         </Border>
       </ControlTemplate>
     </Setter.Value>

@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
+﻿// Quina Barra! · versió 1.2 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Finestra per triar la ubicació i diàleg per canviar el nom d'un lloc.
 using System;
@@ -27,7 +27,7 @@ namespace TempsBarra
         public Tria(Dictionary<string, object> actual)
         {
             P = G.Paleta();
-            W = (Window)G.LlegeixXaml(G.XamlFinestra("Tria.xaml", P));
+            W = (Window)G.LlegeixXaml(G.XamlFinestra("Tria.xaml", P)); G.Direccio(W);
             Capcalera = (Grid)W.FindName("Capcalera"); BTanca = (Button)W.FindName("BTanca"); CaixaCerca = (Border)W.FindName("CaixaCerca");
             Pista = (TextBlock)W.FindName("Pista"); TCerca = (TextBox)W.FindName("TCerca"); BCerca = (Button)W.FindName("BCerca");
             Estat = (TextBlock)W.FindName("Estat"); Llista = (ListBox)W.FindName("Llista"); TNom = (TextBox)W.FindName("TNom");
@@ -210,7 +210,7 @@ namespace TempsBarra
         public DemanaText(string titol, string valor)
         {
             Dictionary<string, string> p = G.Paleta();
-            W = (Window)G.LlegeixXaml(G.XamlFinestra("DemanaText.xaml", p));
+            W = (Window)G.LlegeixXaml(G.XamlFinestra("DemanaText.xaml", p)); G.Direccio(W);
             ((TextBlock)W.FindName("Titol")).Text = titol;
             T = (TextBox)W.FindName("T");
             T.Text = valor;

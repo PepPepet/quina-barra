@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
+﻿// Quina Barra! · versió 1.2 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Blocs del panell que es poden mostrar, amagar i endreçar («Personalitza el panell») i menú ⋯.
 // L'ordre es desa a config.json com a "blocs": [ { "id": "...", "visible": true }, ... ].
@@ -307,7 +307,8 @@ namespace TempsBarra
                 fila.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 fila.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-                CheckBox chk = new CheckBox(); chk.IsChecked = eb.Visible; chk.VerticalAlignment = VerticalAlignment.Center; chk.Margin = new Thickness(0, 0, 10, 0);
+                CheckBox chk = Fixa(new CheckBox()); chk.IsChecked = eb.Visible; chk.VerticalAlignment = VerticalAlignment.Center;   // fixa: el WPF dibuixa malament la marca girada
+                chk.Margin = Dreta ? new Thickness(10, 0, 10, 0) : new Thickness(0, 0, 10, 0);
                 Grid.SetColumn(chk, 1);
                 chk.ToolTip = eb.Visible ? T("personalitza-amaga") : T("personalitza-mostra");
                 string id = eb.Id;
@@ -419,7 +420,7 @@ namespace TempsBarra
 
         public static ContextMenu ObreMenuOpcions()
         {
-            ContextMenu cm = new ContextMenu();
+            ContextMenu cm = new ContextMenu(); Direccio(cm);
             cm.Style = (Style)det.W.FindResource(typeof(ContextMenu));
             cm.Items.Add(OpcioMenu("\uE713", T("configuracio-titol"), () => MostraSubpagina("Personalitza")));
             cm.Items.Add(OpcioMenu("\uE946", VersioNova != null ? T("menu-quant-a-versio-nova") : T("menu-quant-a"), () => MostraSubpagina("QuantA")));

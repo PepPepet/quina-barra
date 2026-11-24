@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
+﻿// Quina Barra! · versió 1.2 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Colors, XAML, icones del temps i peces petites de la interfície.
 using System;
@@ -93,7 +93,7 @@ namespace TempsBarra
                 case "posta": cos = sortidaPosta.Replace("@C@", "#FF8A4C"); break;
                 default: cos = Nuvol(nuvolClar, 0, 0); break;
             }
-            return (UIElement)LlegeixXaml("<Canvas " + XmlNs + " Width=\"32\" Height=\"32\">" + cos + "</Canvas>");
+            return (UIElement)LlegeixXaml("<Canvas " + XmlNs + " FlowDirection=\"LeftToRight\" Width=\"32\" Height=\"32\">" + cos + "</Canvas>");
         }
 
         public static Viewbox IconaCaixa(string tipus, bool dia, double mida)
@@ -108,10 +108,28 @@ namespace TempsBarra
         public static TextBlock Text(string text, double mida, string color, string pes = "Normal")
         {
             TextBlock t = new TextBlock();
-            t.Text = text; t.FontSize = mida; t.Foreground = Pinzell(color); t.TextWrapping = TextWrapping.NoWrap;
+            t.Text = TextDireccio(text); t.FontSize = mida; Direccio(t); t.Foreground = Pinzell(color); t.TextWrapping = TextWrapping.NoWrap;
             t.FontWeight = pes == "SemiBold" ? FontWeights.SemiBold : (pes == "Light" ? FontWeights.Light : FontWeights.Normal);
             return t;
         }
+
+        // ---------- Dreta a esquerra ----------
+        // Una llengua de dreta a esquerra gira les finestres (FlowDirection). Els gràfics, la brúixola, el mapa,
+        // les barres i les icones es fixen d'esquerra a dreta: el temps i les escales hi van sempre igual.
+        public static void Direccio(FrameworkElement e)
+        {
+            if (e != null) e.FlowDirection = Dreta ? FlowDirection.RightToLeft : FlowDirection.LeftToRight;
+        }
+
+        public static T Fixa<T>(T e) where T : FrameworkElement
+        {
+            if (e != null) e.FlowDirection = FlowDirection.LeftToRight;
+            return e;
+        }
+
+        // Fletxa de pàgina següent (›) o anterior (‹) dels Segoe Fluent Icons, girada en una llengua RTL
+        public static string FletxaEndavant() { return ((char)(Dreta ? 0xE76B : 0xE76C)).ToString(); }
+        public static string FletxaEnrere() { return ((char)(Dreta ? 0xE76C : 0xE76B)).ToString(); }
 
         public static void Contingut(Grid graella, params FrameworkElement[] elements)
         {

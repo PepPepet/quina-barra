@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
+﻿// Quina Barra! · versió 1.2 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Fet per Pep Payo amb l'ajuda de Claude (IA d'Anthropic).
 //
@@ -111,7 +111,7 @@ namespace TempsBarra
 
         static void CreaGiny()
         {
-            giny = (Window)LlegeixXaml(Recurs("Giny.xaml"));
+            giny = (Window)LlegeixXaml(Recurs("Giny.xaml")); Direccio(giny);
             gFons = (Border)giny.FindName("Fons"); gIcona = (Viewbox)giny.FindName("Icona");
             gTemp = (TextBlock)giny.FindName("Temp"); gDesc = (TextBlock)giny.FindName("Desc");
             giny.SourceInitialized += (s, e) =>
@@ -231,7 +231,7 @@ namespace TempsBarra
                 G.Conf = G.LlegeixConfig();
                 if (G.Conf == null) { informe.Add("ERROR: no hi ha configuració llegible a " + G.FitxerConf); return Acaba(1); }
                 G.TriaLlengua(llengua ?? G.Conf.Llengua);
-                informe.Add("Llengua: " + G.Llengua + " (disponibles: " + string.Join(", ", G.LlenguesDisponibles()) + ")");
+                informe.Add("Llengua: " + G.Llengua + (G.Dreta ? ", de dreta a esquerra" : "") + " (disponibles: " + string.Join(", ", G.LlenguesDisponibles()) + ")");
                 informe.Add("Configuració: " + G.Conf.Llocs.Count + " llocs (" + string.Join(", ", G.Conf.Llocs.Select(l => G.Nom(l))) + "), tema " + (G.Conf.Tema ?? "null"));
 
                 // Giny (fora de la pantalla; no es col·loca a la barra)
@@ -315,6 +315,7 @@ namespace TempsBarra
             }
             catch (Exception ex) { informe.Add("ERROR: " + ex); return Acaba(1); }
             if (G.TextsQueFalten.Count > 0) informe.Add("ERROR: claus sense text: " + string.Join(", ", G.TextsQueFalten));
+            if (G.TextsSenseTraduir.Count > 0) informe.Add("Textos sense traduir, en anglès (" + G.TextsSenseTraduir.Count + "): " + string.Join(", ", G.TextsSenseTraduir));
             informe.Add("Temps total: " + rt.ElapsedMilliseconds + " ms");
             return Acaba(0);
         }
