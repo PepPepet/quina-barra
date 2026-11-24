@@ -16,7 +16,7 @@ namespace TempsBarra
 {
     public class Municipi { public string Id; public string Nom; }
 
-    // { tema, llengua, llocs: [ {nom, latitud, longitud, codiMeteocat}, ... ] }. El primer lloc és el principal.
+    // { tema, llengua, reserva, llocs: [ {nom, latitud, longitud, codiMeteocat}, ... ] }. El primer lloc és el principal.
     public class Config
     {
         public Dictionary<string, object> Arrel;
@@ -31,6 +31,12 @@ namespace TempsBarra
         {
             get { return J.S(J.G(Arrel, "llengua")); }
             set { if (value == null) Arrel.Remove("llengua"); else Arrel["llengua"] = value; }
+        }
+        // Llengua quan el Windows és en una llengua que el giny no té. Les configuracions noves (des de la 1.2) duen "en";
+        // les de la 1.0 i la 1.1 no en duen i continuen en català, que és com les veien fins ara.
+        public string Reserva
+        {
+            get { string r = J.S(J.G(Arrel, "reserva")); return string.IsNullOrEmpty(r) ? "ca" : r; }
         }
     }
 
@@ -191,6 +197,7 @@ namespace TempsBarra
             Config c = new Config();
             c.Arrel = new Dictionary<string, object>();
             c.Arrel["tema"] = null;
+            c.Arrel["reserva"] = LlenguaBase;   // instal·lació nova: si el Windows és en una llengua que no tenim, en anglès
             c.Llocs = new List<Dictionary<string, object>>();
             c.Llocs.Add(primer);
             c.Arrel["llocs"] = c.Llocs;

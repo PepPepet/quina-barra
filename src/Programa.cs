@@ -62,6 +62,7 @@ namespace TempsBarra
 
             Vist = 0;
             Conf = LlegeixConfig();
+            LlenguaReserva = Conf != null ? Conf.Reserva : LlenguaBase;   // sense configuració = instal·lació nova
             TriaLlengua(Conf != null ? Conf.Llengua : null);
             if (Conf != null) Registre("Arrencada: " + Conf.Llocs.Count + " llocs (" + string.Join(", ", Conf.Llocs.Select(l => Nom(l))) + ")");
             if (Conf == null && File.Exists(FitxerConf))
@@ -230,6 +231,7 @@ namespace TempsBarra
                 G.Vist = 0;
                 G.Conf = G.LlegeixConfig();
                 if (G.Conf == null) { informe.Add("ERROR: no hi ha configuració llegible a " + G.FitxerConf); return Acaba(1); }
+                G.LlenguaReserva = G.Conf.Reserva;
                 G.TriaLlengua(llengua ?? G.Conf.Llengua);
                 informe.Add("Llengua: " + G.Llengua + (G.Dreta ? ", de dreta a esquerra" : "") + " (disponibles: " + string.Join(", ", G.LlenguesDisponibles()) + ")");
                 informe.Add("Configuració: " + G.Conf.Llocs.Count + " llocs (" + string.Join(", ", G.Conf.Llocs.Select(l => G.Nom(l))) + "), tema " + (G.Conf.Tema ?? "null"));

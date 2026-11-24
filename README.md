@@ -27,7 +27,7 @@ Giny per a Windows 11 que posa **el temps del teu poble** a l'esquerra de la bar
 - **Radar de pluja** de les últimes 2 hores, animat, sobre un mapa d'OpenStreetMap.
 - **Configuració** (roda dentada del menú ⋯): la llengua i **Personalitza el panell**, per triar quins blocs vols veure i en quin ordre. El que amaguis ja no es baixa d'internet.
 - Als municipis de Catalunya, enllaç directe a la previsió de **Meteocat**.
-- **En deu llengües**: català, valencià, gallec, basc, asturià, aragonès, occità, aranès, alguerès i anglès. Agafa la del Windows si la té (si no, surt en anglès), i la pots canviar a **Configuració**. Preparat per a llengües de dreta a esquerra, com l'àrab o l'hebreu.
+- **En deu llengües**: català, valencià, gallec, basc, asturià, aragonès, occità, aranès, alguerès i anglès. Agafa la del Windows si la té (si no, en una instal·lació nova surt en anglès; si ja el tenies d'abans, en català), i la pots canviar a **Configuració**. Preparat per a llengües de dreta a esquerra, com l'àrab o l'hebreu.
 - Mode clar, fosc o com el Windows. S'amaga quan mires un vídeo a pantalla completa.
 - Lleuger: uns 100 MB de memòria i pràcticament gens de processador.
 
@@ -73,7 +73,7 @@ Un cop al dia mira si hi ha una versió nova. No la baixa ni la instal·la pel s
   <img src="docs/captures/panell-eu.png" width="380" alt="Panell en basc">
 </p>
 
-Som de Catalunya i el giny l'hem fet en català. Les altres llengües les hem traduït amb l'ajuda de Claude, la IA d'Anthropic, i les hem revisat amb cura, però no som lingüistes: si hi trobes errors, els suggeriments són benvinguts. El giny tria la llengua del Windows si la té (el Windows té català, valencià, gallec i basc) i, si no, surt en anglès; la pots triar a mà a **Configuració**.
+Som de Catalunya i el giny l'hem fet en català. Les altres llengües les hem traduït amb l'ajuda de Claude, la IA d'Anthropic, i les hem revisat amb cura, però no som lingüistes: si hi trobes errors, els suggeriments són benvinguts. El giny tria la llengua del Windows si la té (el Windows té català, valencià, gallec i basc) i, si no, surt en anglès (o en català, si ja el tenies abans de la 1.2); la pots triar a mà a **Configuració**.
 
 Per a qui vulgui traduir-lo:
 

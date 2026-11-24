@@ -228,6 +228,22 @@ namespace TempsBarra
             Igual("ca", G.CodisPerCultura("ca-ES").First(disp.Contains), "ca-ES → ca (disponible)");
             Igual("gl", G.CodisPerCultura("gl-ES").First(disp.Contains), "gl-ES → gl (disponible)");
             Igual("en", G.CodisPerCultura("en-US").First(disp.Contains), "en-US → en (disponible)");
+
+            // Llengua de reserva quan no tenim la del Windows: es fa com si el Windows fos en castellà, que no tenim
+            System.Globalization.CultureInfo abans = System.Threading.Thread.CurrentThread.CurrentUICulture;
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("es-ES");
+            Igual(null, G.LlenguaDelWindows(disp), "es-ES no la tenim");
+            G.LlenguaReserva = "en"; G.TriaLlengua(null);
+            Igual("en", G.Llengua, "instal·lació nova amb el Windows en castellà: anglès");
+            G.LlenguaReserva = "ca"; G.TriaLlengua(null);
+            Igual("ca", G.Llengua, "actualització des de la 1.1 amb el Windows en castellà: català");
+            G.TriaLlengua("gl");
+            Igual("gl", G.Llengua, "la llengua desada mana");
+            System.Threading.Thread.CurrentThread.CurrentUICulture = new CultureInfo("eu-ES");
+            G.LlenguaReserva = "ca"; G.TriaLlengua(null);
+            Igual("eu", G.Llengua, "actualització amb el Windows en basc: basc");
+            System.Threading.Thread.CurrentThread.CurrentUICulture = abans;
+            G.LlenguaReserva = "en";
         }
 
         // ---------- 5. Dreta a esquerra ----------

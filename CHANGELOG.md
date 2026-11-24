@@ -6,7 +6,7 @@ Totes les versions de **Quina Barra!**, de la més nova a la més antiga.
 
 Ara també parla anglès i està preparat perquè la comunitat de [translatewiki.net](https://translatewiki.net/) el pugui traduir a qualsevol llengua.
 
-- **Anglès:** el giny surt en anglès si el Windows és en una llengua que no tenim (abans sortia en català). L'anglès (`en.json`) passa a ser la base de les traduccions; el català continua sent la llengua en què s'ha fet el giny i no canvia gens.
+- **Anglès:** en les instal·lacions noves, el giny surt en anglès si el Windows és en una llengua que no tenim (abans sortia en català). Qui ja el tenia d'abans continua igual: si el Windows és en una llengua que no tenim, en català (la configuració nova porta `"reserva": "en"`; les de la 1.0 i la 1.1, sense aquesta marca, es queden amb el català). L'anglès (`en.json`) passa a ser la base de les traduccions; el català continua sent la llengua en què s'ha fet el giny i no canvia gens.
 - **Llengües de reserva:** si a una llengua li falta un text, surt el de la llengua mare (valencià i alguerès → català; aranès → occità) i, al final, en anglès.
 - **Codis de llengua de MediaWiki** (els de translatewiki): el giny reconeix la llengua del Windows amb aquests codis (`ca-valencia`, `pt-br`, `zh-hans`, `zh-hant`, `sr-ec`, `ckb`...). El selector de Configuració mostra totes les llengües que porti l'exe i, si són moltes, el menú es desplaça.
 - **Plurals de totes les llengües:** `{{PLURAL}}` fa servir les regles de CLDR, les mateixes que MediaWiki (incloses les seves excepcions): àrab (sis formes), rus, polonès, txec, irlandès, gal·lès, bretó... Les comprova `src/proves/prova-plurals.ps1` amb els més de 13.000 exemples oficials.

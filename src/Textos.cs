@@ -102,13 +102,17 @@ namespace TempsBarra
             return r;
         }
 
-        // Tria la llengua: la desada a la configuració; si no n'hi ha, la del Windows; si no la tenim, l'anglès
+        // Llengua si el Windows és en una llengua que no tenim: l'anglès, o el català per a qui ja tenia el giny abans de la 1.2
+        public static string LlenguaReserva = LlenguaBase;
+
+        // Tria la llengua: la desada a la configuració; si no n'hi ha, la del Windows; si no la tenim, la de reserva
         public static void TriaLlengua(string desada)
         {
             List<string> disp = LlenguesDisponibles();
             string codi = null;
             if (!string.IsNullOrEmpty(desada) && disp.Contains(desada)) codi = desada;
             if (codi == null) codi = LlenguaDelWindows(disp);
+            if (codi == null && disp.Contains(LlenguaReserva)) codi = LlenguaReserva;
             CarregaLlengua(codi ?? LlenguaBase);
         }
 

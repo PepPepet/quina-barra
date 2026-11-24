@@ -1,4 +1,4 @@
-# Quina Barra! · compila i passa les proves dels plurals, de les llengües de reserva i dels codis de llengua.
+﻿# Quina Barra! · compila i passa les proves dels plurals, de les llengües de reserva i dels codis de llengua.
 # Ús: powershell -NoProfile -ExecutionPolicy Bypass -File proves\prova-plurals.ps1
 # No toca l'exe del giny: compila un exe de proves a la carpeta temporal i l'esborra en acabar.
 $ErrorActionPreference = 'Stop'
