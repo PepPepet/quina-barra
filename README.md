@@ -80,6 +80,14 @@ La configuració és a `%APPDATA%\QuinaBarra\` (`config.json`, amb els llocs, el
 
 Per desinstal·lar-lo: desmarca **Engega amb el Windows**, tria **Tanca el giny** i esborra `QuinaBarra.exe` i la carpeta `%APPDATA%\QuinaBarra`.
 
+## Seguretat
+
+`QuinaBarra.exe` no té una signatura digital de pagament, i per això el Windows avisa el primer cop que l'obres. Per comprovar que és el de debò:
+
+- L'**empremta SHA-256** de cada versió és a les notes de la seva [release](https://github.com/PepPepet/quina-barra/releases).
+- **Anàlisi de la 1.1 a [VirusTotal](https://www.virustotal.com/gui/file/c51d4f56b7937ab080f3da46e9248dbe2c86c95395b9a9d639edd68a91a507eb)**: 3 de 70 antivirus el marquen per detecció automàtica d'«anomalies» (Malwarebytes, Trapmine i SecureAge). És un fals positiu habitual en programes petits i nous sense signatura de pagament. Els principals (Microsoft Defender, Kaspersky, ESET, Bitdefender, Avast, Norton, McAfee...) no hi troben res.
+- El **codi és obert**: el pots llegir i compilar tu mateix (vegeu més avall).
+
 ## Privadesa
 
 No recull cap dada teva. Només envia les coordenades dels llocs que has desat als serveis del temps per demanar-ne la previsió. La configuració es queda al teu ordinador.
