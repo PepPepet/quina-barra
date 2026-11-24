@@ -51,15 +51,19 @@ namespace TempsBarra
     {
         public const string UserAgent = "QuinaBarra/1.0";
 
+        // Codis WMO del temps que fa servir Open-Meteo → clau del text
         static readonly Dictionary<int, string> Estats = new Dictionary<int, string> {
-            {0,"Cel serè"},{1,"Gairebé serè"},{2,"Mig ennuvolat"},{3,"Cel cobert"},
-            {45,"Boira"},{48,"Boira gebradora"},
-            {51,"Plugim feble"},{53,"Plugim"},{55,"Plugim intens"},{56,"Plugim gelat"},{57,"Plugim gelat"},
-            {61,"Pluja feble"},{63,"Pluja"},{65,"Pluja forta"},{66,"Pluja gelada"},{67,"Pluja gelada"},
-            {71,"Neu feble"},{73,"Neu"},{75,"Neu forta"},{77,"Neu granulada"},
-            {80,"Ruixats febles"},{81,"Ruixats"},{82,"Ruixats forts"},{85,"Ruixats de neu"},{86,"Ruixats de neu"},
-            {95,"Tempesta"},{96,"Tempesta amb calamarsa"},{99,"Tempesta amb calamarsa"}
+            {0,"estat-0"},{1,"estat-1"},{2,"estat-2"},{3,"estat-3"},
+            {45,"estat-45"},{48,"estat-48"},
+            {51,"estat-51"},{53,"estat-53"},{55,"estat-55"},{56,"estat-56"},{57,"estat-56"},
+            {61,"estat-61"},{63,"estat-63"},{65,"estat-65"},{66,"estat-66"},{67,"estat-66"},
+            {71,"estat-71"},{73,"estat-73"},{75,"estat-75"},{77,"estat-77"},
+            {80,"estat-80"},{81,"estat-81"},{82,"estat-82"},{85,"estat-85"},{86,"estat-85"},
+            {95,"estat-95"},{96,"estat-96"},{99,"estat-96"}
         };
+
+        // Dies de la setmana abreujats (0 = diumenge, com DayOfWeek)
+        public static string DiaCurt(DayOfWeek d) { return T("dia-curt-" + (int)d); }
 
         // ---------- Utilitats ----------
         public static object Web(string url)
@@ -133,43 +137,43 @@ namespace TempsBarra
             {
                 int para = 0;
                 for (int k = 1; k < probs.Count; k++) if (probs[k] < 30) { para = k; break; }
-                frases.Add(para > 0 && para < hores.Count ? "Ara plou; hauria de parar cap a les " + hores[para] + "." : "Ara plou i seguirà plovent unes quantes hores.");
+                frases.Add(para > 0 && para < hores.Count ? T("resum-plou-parara", hores[para]) : T("resum-plou-seguira"));
             }
             else
             {
                 int k50 = 0, k30 = 0;
                 for (int k = 1; k < probs.Count; k++) if (probs[k] >= 50) { k50 = k; break; }
                 for (int k = 1; k < probs.Count; k++) if (probs[k] >= 30) { k30 = k; break; }
-                if (k50 > 0 && k50 < hores.Count) frases.Add("És probable que plogui cap a les " + hores[k50] + ".");
-                else if (k30 > 0 && k30 < hores.Count) frases.Add("Podria caure algun ruixat cap a les " + hores[k30] + ".");
-                else frases.Add("No es preveu pluja en les pròximes 12 hores.");
+                if (k50 > 0 && k50 < hores.Count) frases.Add(T("resum-pluja-probable", hores[k50]));
+                else if (k30 > 0 && k30 < hores.Count) frases.Add(T("resum-pluja-possible", hores[k30]));
+                else frases.Add(T("resum-sense-pluja"));
             }
             if (dies.Count >= 3)
             {
                 double dif = (((dies[1].Max ?? 0) + (dies[2].Max ?? 0)) / 2) - (dies[0].Max ?? 0);
-                if (dif <= -3) frases.Add("Les temperatures baixaran clarament els pròxims dos dies.");
-                else if (dif <= -1) frases.Add("Es preveu un lleuger descens de les temperatures els pròxims dos dies.");
-                else if (dif >= 3) frases.Add("Les temperatures pujaran clarament els pròxims dos dies.");
-                else if (dif >= 1) frases.Add("Es preveu una lleugera pujada de les temperatures els pròxims dos dies.");
-                else frases.Add("Les temperatures es mantindran estables els pròxims dos dies.");
+                if (dif <= -3) frases.Add(T("resum-temp-baixen-molt"));
+                else if (dif <= -1) frases.Add(T("resum-temp-baixen"));
+                else if (dif >= 3) frases.Add(T("resum-temp-pugen-molt"));
+                else if (dif >= 1) frases.Add(T("resum-temp-pugen"));
+                else frases.Add(T("resum-temp-estables"));
             }
             object ratxes = J.G(d, "current", "wind_gusts_10m");
-            if (J.Dz(ratxes) >= 50) frases.Add("Compte amb les ratxes de vent, de fins a " + Graus(J.D(ratxes)) + " km/h.");
-            if (J.Dz(J.At(J.G(d, "daily", "uv_index_max"), 0)) >= 6 && J.I(J.G(d, "current", "is_day")) == 1) frases.Add("Índex UV alt cap al migdia: protegeix-te del sol.");
+            if (J.Dz(ratxes) >= 50) frases.Add(T("resum-ratxes", Graus(J.D(ratxes))));
+            if (J.Dz(J.At(J.G(d, "daily", "uv_index_max"), 0)) >= 6 && J.I(J.G(d, "current", "is_day")) == 1) frases.Add(T("resum-uv-alt"));
             return string.Join(" ", frases);
         }
 
         // ---------- Índex de Qualitat de l'Aire (ICA) del MITECO, el que fa servir també la Generalitat ----------
         // Partícules: mitjana de 24 h; ozó: mitjana de 8 h; NO2 i SO2: darrera hora. Llindars en µg/m³.
-        public static readonly string[] IcaNoms = { "Bona", "Raonablement bona", "Regular", "Desfavorable", "Molt desfavorable", "Extremadament desfavorable" };
+        public static string IcaNom(int categoria) { return T("ica-" + categoria); }   // 0 = bona ... 5 = extremadament desfavorable
         public static readonly string[] IcaColors = { "#50F0E6", "#50CCAA", "#F0E641", "#FF5050", "#960032", "#7D2181" };
-        class Contaminant { public string Clau, Nom; public int Hores; public double[] Llindars; }
+        class Contaminant { public string Clau, Nom;  /* Nom: clau del text */ public int Hores; public double[] Llindars; }
         static readonly Contaminant[] IcaContaminants = {
-            new Contaminant { Clau = "pm2_5", Nom = "Partícules PM2,5", Hores = 24, Llindars = new double[] { 10, 20, 25, 50, 75, 800 } },
-            new Contaminant { Clau = "pm10", Nom = "Partícules PM10", Hores = 24, Llindars = new double[] { 20, 40, 50, 100, 150, 1200 } },
-            new Contaminant { Clau = "ozone", Nom = "Ozó", Hores = 8, Llindars = new double[] { 50, 100, 130, 240, 380, 800 } },
-            new Contaminant { Clau = "nitrogen_dioxide", Nom = "Diòxid de nitrogen", Hores = 1, Llindars = new double[] { 40, 90, 120, 230, 340, 1000 } },
-            new Contaminant { Clau = "sulphur_dioxide", Nom = "Diòxid de sofre", Hores = 1, Llindars = new double[] { 100, 200, 350, 500, 750, 1250 } }
+            new Contaminant { Clau = "pm2_5", Nom = "ica-pm25", Hores = 24, Llindars = new double[] { 10, 20, 25, 50, 75, 800 } },
+            new Contaminant { Clau = "pm10", Nom = "ica-pm10", Hores = 24, Llindars = new double[] { 20, 40, 50, 100, 150, 1200 } },
+            new Contaminant { Clau = "ozone", Nom = "ica-ozo", Hores = 8, Llindars = new double[] { 50, 100, 130, 240, 380, 800 } },
+            new Contaminant { Clau = "nitrogen_dioxide", Nom = "ica-no2", Hores = 1, Llindars = new double[] { 40, 90, 120, 230, 340, 1000 } },
+            new Contaminant { Clau = "sulphur_dioxide", Nom = "ica-so2", Hores = 1, Llindars = new double[] { 100, 200, 350, 500, 750, 1250 } }
         };
 
         static Ica CalculaIca(object aq)
@@ -193,9 +197,9 @@ namespace TempsBarra
                 while (cat < 5 && v > c.Llindars[cat]) cat++;
                 double baix = cat == 0 ? 0.0 : c.Llindars[cat - 1];
                 double frac = Math.Max(0.0, Math.Min(1.0, (v - baix) / (c.Llindars[cat] - baix)));
-                Ica o = new Ica { Categoria = cat, Posicio = (cat + frac) / 6.0, Nom = c.Nom, Valor = v };
-                detall.Add(c.Nom + ": " + Math.Round(v).ToString(Inv) + " µg/m³ (" + IcaNoms[cat].ToLower() + ")");
-                llista.Add(new IcaItem { Nom = c.Nom, Valor = v, Categoria = cat, Hores = c.Hores });
+                Ica o = new Ica { Categoria = cat, Posicio = (cat + frac) / 6.0, Nom = T(c.Nom), Valor = v };
+                detall.Add(T("ica-detall", T(c.Nom), Math.Round(v).ToString(Inv), IcaNom(cat).ToLower()));
+                llista.Add(new IcaItem { Nom = T(c.Nom), Valor = v, Categoria = cat, Hores = c.Hores });
                 if (pitjor == null || o.Posicio > pitjor.Posicio) pitjor = o;
             }
             if (pitjor != null) { pitjor.Detall = string.Join("\n", detall); pitjor.Llista = llista; }
@@ -230,15 +234,15 @@ namespace TempsBarra
         // Escala de Douglas (estat de la mar), amb els noms que fa servir Meteocat
         static string EstatMar(double h)
         {
-            if (h < 0.05) return "Calma";
-            if (h <= 0.1) return "Mar arrissada";
-            if (h <= 0.5) return "Marejol";
-            if (h <= 1.25) return "Maror";
-            if (h <= 2.5) return "Forta maror";
-            if (h <= 4) return "Maregassa";
-            if (h <= 6) return "Mar brava";
-            if (h <= 9) return "Mar molt brava";
-            return "Mar desfeta";
+            if (h < 0.05) return T("mar-douglas-0");
+            if (h <= 0.1) return T("mar-douglas-1");
+            if (h <= 0.5) return T("mar-douglas-2");
+            if (h <= 1.25) return T("mar-douglas-3");
+            if (h <= 2.5) return T("mar-douglas-4");
+            if (h <= 4) return T("mar-douglas-5");
+            if (h <= 6) return T("mar-douglas-6");
+            if (h <= 9) return T("mar-douglas-7");
+            return T("mar-douglas-8");
         }
 
         static int IndexHora(object temps, DateTime ara)
@@ -275,7 +279,7 @@ namespace TempsBarra
                 if (i >= J.Len(temps) || J.At(J.G(h, "wave_height"), i) == null) break;
                 hores.Add(new HoraMar
                 {
-                    Etiqueta = k == 0 ? "Ara" : Data(J.At(temps, i)).ToString("H:mm", Inv),
+                    Etiqueta = k == 0 ? T("hora-ara") : Data(J.At(temps, i)).ToString("H:mm", Inv),
                     Alcada = J.Dz(J.At(J.G(h, "wave_height"), i)), Dir = J.Dz(J.At(J.G(h, "wave_direction"), i)),
                     Periode = J.Dz(J.At(J.G(h, "wave_period"), i)), Fons = J.Dz(J.At(J.G(h, "swell_wave_height"), i))
                 });
@@ -290,6 +294,14 @@ namespace TempsBarra
 
         // Estat diari de les platges (dades obertes de la Generalitat): bandera, meduses, transparència, aigua.
         // Només hi ha dades en temporada de bany (de juny a setembre); fora de temporada es mostra l'últim estat.
+        // El color de la bandera arriba en català a les dades («verda», «groga», «vermella»)
+        public static string NomBandera(string b)
+        {
+            if (string.IsNullOrEmpty(b)) return b;
+            string clau = "platja-bandera-" + b.ToLowerInvariant();
+            return TeText(clau) ? T(clau) : b;
+        }
+
         public static readonly Dictionary<string, string> BanderaColors = new Dictionary<string, string> { { "verda", "#2FB344" }, { "groga", "#F2C200" }, { "vermella", "#E5484D" } };
 
         static bool NoNA(string s) { return !string.IsNullOrEmpty(s) && s != "N/A"; }
@@ -352,11 +364,11 @@ namespace TempsBarra
         public static string TextPlatja(Platja pl)
         {
             List<string> parts = new List<string>();
-            parts.Add("bandera " + pl.Bandera);
+            parts.Add(T("platja-bandera", NomBandera(pl.Bandera)));
             if (!string.IsNullOrEmpty(pl.Motiu)) parts[0] += " (" + pl.Motiu.ToLower() + ")";
-            if (!string.IsNullOrEmpty(pl.Transparencia)) parts.Add("aigua " + pl.Transparencia);
+            if (!string.IsNullOrEmpty(pl.Transparencia)) parts.Add(T("platja-aigua", pl.Transparencia));
             if (!string.IsNullOrEmpty(pl.Aigua)) parts.Add(pl.Aigua + " °C");
-            parts.Add(!string.IsNullOrEmpty(pl.Meduses) ? "meduses: " + pl.Meduses : "sense meduses");
+            parts.Add(!string.IsNullOrEmpty(pl.Meduses) ? T("platja-meduses", pl.Meduses) : T("platja-sense-meduses"));
             return string.Join(" · ", parts);
         }
 
@@ -448,7 +460,7 @@ namespace TempsBarra
                 DateTime hi = Data(J.At(ht, i));
                 hores.Add(new Hora
                 {
-                    Etiqueta = k == 0 ? "Ara" : hi.ToString("H:mm", Inv),
+                    Etiqueta = k == 0 ? T("hora-ara") : hi.ToString("H:mm", Inv),
                     Temp = th, Categoria = Categoria(J.I(J.At(J.G(h, "weather_code"), i))), Dia = J.I(J.At(J.G(h, "is_day"), i)) == 1,
                     Pluja = J.I(J.At(J.G(h, "precipitation_probability"), i)),
                     Data = hi.Date,
@@ -468,7 +480,7 @@ namespace TempsBarra
                 double? mn = ValorModels(mmD, "temperature_2m_min", j); if (mn == null) mn = J.D(J.At(J.G(dl, "temperature_2m_min"), j));
                 dies.Add(new DiaPrev
                 {
-                    Etiqueta = j == 0 ? "Avui" : (j == 1 ? "Demà" : DiesSetm[(int)data.DayOfWeek]),
+                    Etiqueta = j == 0 ? T("dia-avui") : (j == 1 ? T("dia-dema") : DiaCurt(data.DayOfWeek)),
                     Data = data.ToString("d/M", Inv), Max = mx, Min = mn,
                     Categoria = Categoria(J.I(J.At(J.G(dl, "weather_code"), j))), Pluja = J.I(J.At(J.G(dl, "precipitation_probability_max"), j))
                 });
@@ -483,7 +495,7 @@ namespace TempsBarra
                 else if (Math.Abs((ara - posta).TotalMinutes) <= 30) cat = "posta";
             }
             string estat;
-            if (!Estats.TryGetValue(codi, out estat)) estat = "Temps desconegut";
+            if (Estats.TryGetValue(codi, out estat)) estat = T(estat); else estat = T("estat-desconegut");
             int offset = J.I(J.G(d, "utc_offset_seconds"));
 
             return new Dades

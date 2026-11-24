@@ -16,7 +16,7 @@ namespace TempsBarra
 {
     public class Municipi { public string Id; public string Nom; }
 
-    // { tema, llocs: [ {nom, latitud, longitud, codiMeteocat}, ... ] }. El primer lloc és el principal.
+    // { tema, llengua, llocs: [ {nom, latitud, longitud, codiMeteocat}, ... ] }. El primer lloc és el principal.
     public class Config
     {
         public Dictionary<string, object> Arrel;
@@ -25,6 +25,12 @@ namespace TempsBarra
         {
             get { return J.S(J.G(Arrel, "tema")); }
             set { Arrel["tema"] = value; }
+        }
+        // Codi de la llengua triada a mà ("gl", "eu"...); null = la del Windows
+        public string Llengua
+        {
+            get { return J.S(J.G(Arrel, "llengua")); }
+            set { if (value == null) Arrel.Remove("llengua"); else Arrel["llengua"] = value; }
         }
     }
 
@@ -41,7 +47,6 @@ namespace TempsBarra
         public static readonly string[] Models = { "meteofrance_seamless", "icon_seamless", "ecmwf_ifs025" };
         public static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
         public static readonly CultureInfo Ca = CultureInfo.GetCultureInfo("ca-ES");
-        public static readonly string[] DiesSetm = { "dg.", "dl.", "dt.", "dc.", "dj.", "dv.", "ds." };
         static readonly UTF8Encoding Utf8SenseBom = new UTF8Encoding(false);
 
         // Mode de prova (/prova): no escriu la configuració ni el registre

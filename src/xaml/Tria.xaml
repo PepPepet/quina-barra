@@ -30,36 +30,36 @@
       </Grid.RowDefinitions>
 
       <Grid x:Name="Capcalera" Grid.Row="0" Background="Transparent">
-        <TextBlock Text="Tria la ubicació" FontSize="20" FontWeight="SemiBold" Foreground="@FG@" VerticalAlignment="Center"/>
+        <TextBlock Text="@T:tria-titol@" FontSize="20" FontWeight="SemiBold" Foreground="@FG@" VerticalAlignment="Center"/>
         <Button x:Name="BTanca" Style="{StaticResource Pla}" Content="&#xE8BB;" FontFamily="Segoe Fluent Icons, Segoe MDL2 Assets" FontSize="11" HorizontalAlignment="Right" Padding="10,8"/>
       </Grid>
       <TextBlock Grid.Row="1" Margin="0,6,0,16" TextWrapping="Wrap" Foreground="@SUB@" FontSize="13"
-                 Text="Escriu el teu poble, ciutat o barri. Tu tries on ets: no fem servir la teva connexió per endevinar-ho."/>
+                 Text="@T:tria-explicacio@"/>
 
       <Grid Grid.Row="2">
         <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
         <Border x:Name="CaixaCerca" Background="@CARD@" BorderBrush="@BORDER@" BorderThickness="1" CornerRadius="5" Height="36">
           <Grid>
-            <TextBlock x:Name="Pista" Text="Per exemple: Ripoll, Amposta, Gràcia..." Foreground="@SUB@" Opacity="0.7" FontSize="14" Margin="12,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
+            <TextBlock x:Name="Pista" Text="@T:tria-exemple@" Foreground="@SUB@" Opacity="0.7" FontSize="14" Margin="12,0" VerticalAlignment="Center" IsHitTestVisible="False"/>
             <TextBox x:Name="TCerca" Background="Transparent" BorderThickness="0" Foreground="@FG@" CaretBrush="@FG@" FontSize="14" Padding="9,0" VerticalContentAlignment="Center"/>
           </Grid>
         </Border>
-        <Button x:Name="BCerca" Grid.Column="1" Style="{StaticResource Accent}" Content="Cerca" Margin="8,0,0,0" Height="36" Padding="18,0"/>
+        <Button x:Name="BCerca" Grid.Column="1" Style="{StaticResource Accent}" Content="@T:tria-cerca@" Margin="8,0,0,0" Height="36" Padding="18,0"/>
       </Grid>
 
-      <TextBlock x:Name="Estat" Grid.Row="3" Margin="2,12,0,6" Foreground="@SUB@" FontSize="12" Text="Resultats"/>
+      <TextBlock x:Name="Estat" Grid.Row="3" Margin="2,12,0,6" Foreground="@SUB@" FontSize="12" Text="@T:tria-resultats@"/>
       <Border Grid.Row="4" Background="@CARD@" BorderBrush="@BORDER@" BorderThickness="1" CornerRadius="6" Padding="4" Height="230">
         <ListBox x:Name="Llista" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled"/>
       </Border>
 
-      <TextBlock Grid.Row="5" Margin="2,16,0,6" Foreground="@SUB@" FontSize="12" Text="Nom que vols veure a la barra"/>
+      <TextBlock Grid.Row="5" Margin="2,16,0,6" Foreground="@SUB@" FontSize="12" Text="@T:tria-nom@"/>
       <Border Grid.Row="6" Background="@CARD@" BorderBrush="@BORDER@" BorderThickness="1" CornerRadius="5" Height="36">
         <TextBox x:Name="TNom" Background="Transparent" BorderThickness="0" Foreground="@FG@" CaretBrush="@FG@" FontSize="14" Padding="9,0" VerticalContentAlignment="Center"/>
       </Border>
 
       <StackPanel Grid.Row="7" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
-        <Button x:Name="BCancela" Content="Cancel·la" MinWidth="110"/>
-        <Button x:Name="BDesa" Style="{StaticResource Accent}" Content="Desa" MinWidth="110" Margin="8,0,0,0" IsEnabled="False"/>
+        <Button x:Name="BCancela" Content="@T:boto-cancela@" MinWidth="110"/>
+        <Button x:Name="BDesa" Style="{StaticResource Accent}" Content="@T:boto-desa@" MinWidth="110" Margin="8,0,0,0" IsEnabled="False"/>
       </StackPanel>
     </Grid>
   </Border>

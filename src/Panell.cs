@@ -51,11 +51,11 @@ namespace TempsBarra
         static string Rajola(string nom, string glif, string titol)
         {
             // Targeta petita: glif + títol a dalt, contingut a sota (x:Name = R<nom>)
-            return "<Border x:Name=\"T" + nom + "\" Background=\"@CARD@\" BorderBrush=\"@BORDER@\" BorderThickness=\"1\" CornerRadius=\"8\" Margin=\"4\" Padding=\"14,12\" Height=\"150\" Cursor=\"Hand\" ToolTip=\"Fes-hi clic per veure'n el detall\">\n" +
+            return "<Border x:Name=\"T" + nom + "\" Background=\"@CARD@\" BorderBrush=\"@BORDER@\" BorderThickness=\"1\" CornerRadius=\"8\" Margin=\"4\" Padding=\"14,12\" Height=\"150\" Cursor=\"Hand\" ToolTip=\"" + XmlText(T("rajola-ajuda")) + "\">\n" +
                 "  <DockPanel>\n" +
                 "    <StackPanel DockPanel.Dock=\"Top\" Orientation=\"Horizontal\" Margin=\"0,0,0,6\" HorizontalAlignment=\"Center\">\n" +
                 "      <Viewbox Width=\"14\" Height=\"14\" VerticalAlignment=\"Center\" Margin=\"0,0,7,0\"><Path Width=\"14\" Height=\"14\" Data=\"" + glif + "\" Stroke=\"@SUB@\" StrokeThickness=\"1.3\" StrokeStartLineCap=\"Round\" StrokeEndLineCap=\"Round\" StrokeLineJoin=\"Round\"/></Viewbox>\n" +
-                "      <TextBlock Text=\"" + titol + "\" FontSize=\"12.5\" Foreground=\"@SUB@\" VerticalAlignment=\"Center\"/>\n" +
+                "      <TextBlock Text=\"" + XmlText(titol) + "\" FontSize=\"12.5\" Foreground=\"@SUB@\" VerticalAlignment=\"Center\"/>\n" +
                 "      <TextBlock Text=\"&#xE76C;\" FontFamily=\"Segoe Fluent Icons, Segoe MDL2 Assets\" FontSize=\"9\" Foreground=\"@SUB@\" VerticalAlignment=\"Center\" Margin=\"6,1,0,0\" Opacity=\"0.7\"/>\n" +
                 "    </StackPanel>\n" +
                 "    <Grid x:Name=\"R" + nom + "\"/>\n" +
@@ -66,14 +66,14 @@ namespace TempsBarra
         public static Det NovaFinestraDetall()
         {
             Dictionary<string, string> p = Paleta();
-            string rajoles = Rajola("Pluja", "M7,1.5 C7,1.5 2.5,7 2.5,9.3 A4.5,4.5 0 0 0 11.5,9.3 C11.5,7 7,1.5 7,1.5 Z", "Precipitació") +
-                Rajola("Vent", "M1,5 H9.5 A2,2 0 1 0 7.5,3 M1,9 H11 A2,2 0 1 1 9,11", "Vent") +
-                Rajola("Sol", "M3,10 A4,4 0 0 1 11,10 M1,12.5 H13 M7,2 V4 M2.8,5.3 L4,6.5 M11.2,5.3 L10,6.5", "Sortida i posta") +
-                Rajola("UV", "M7,4.5 A2.5,2.5 0 1 1 6.99,4.5 Z M7,0.8 V2.3 M7,11.7 V13.2 M0.8,7 H2.3 M11.7,7 H13.2 M2.6,2.6 L3.7,3.7 M10.3,10.3 L11.4,11.4 M2.6,11.4 L3.7,10.3 M10.3,3.7 L11.4,2.6", "Índex UV") +
-                Rajola("Aire", "M1,4 C3,2.5 5,2.5 7,4 C9,5.5 11,5.5 13,4 M1,8 C3,6.5 5,6.5 7,8 C9,9.5 11,9.5 13,8 M1,12 C3,10.5 5,10.5 7,12 C9,13.5 11,13.5 13,12", "Qualitat de l'aire") +
-                Rajola("Visib", "M1,7 C3,3 11,3 13,7 C11,11 3,11 1,7 Z M7,5 A2,2 0 1 1 6.99,5 Z", "Visibilitat") +
-                Rajola("Humitat", "M7,1.5 C7,1.5 2.5,7 2.5,9.3 A4.5,4.5 0 0 0 11.5,9.3 C11.5,7 7,1.5 7,1.5 Z M5,10 A2,2 0 0 0 7,12", "Humitat") +
-                Rajola("Pressio", "M2,11 A5.5,5.5 0 1 1 12,11 M7,8 L9.5,5", "Pressió");
+            string rajoles = Rajola("Pluja", "M7,1.5 C7,1.5 2.5,7 2.5,9.3 A4.5,4.5 0 0 0 11.5,9.3 C11.5,7 7,1.5 7,1.5 Z", T("bloc-pluja")) +
+                Rajola("Vent", "M1,5 H9.5 A2,2 0 1 0 7.5,3 M1,9 H11 A2,2 0 1 1 9,11", T("bloc-vent")) +
+                Rajola("Sol", "M3,10 A4,4 0 0 1 11,10 M1,12.5 H13 M7,2 V4 M2.8,5.3 L4,6.5 M11.2,5.3 L10,6.5", T("rajola-sol")) +
+                Rajola("UV", "M7,4.5 A2.5,2.5 0 1 1 6.99,4.5 Z M7,0.8 V2.3 M7,11.7 V13.2 M0.8,7 H2.3 M11.7,7 H13.2 M2.6,2.6 L3.7,3.7 M10.3,10.3 L11.4,11.4 M2.6,11.4 L3.7,10.3 M10.3,3.7 L11.4,2.6", T("bloc-uv")) +
+                Rajola("Aire", "M1,4 C3,2.5 5,2.5 7,4 C9,5.5 11,5.5 13,4 M1,8 C3,6.5 5,6.5 7,8 C9,9.5 11,9.5 13,8 M1,12 C3,10.5 5,10.5 7,12 C9,13.5 11,13.5 13,12", T("bloc-aire")) +
+                Rajola("Visib", "M1,7 C3,3 11,3 13,7 C11,11 3,11 1,7 Z M7,5 A2,2 0 1 1 6.99,5 Z", T("bloc-visibilitat")) +
+                Rajola("Humitat", "M7,1.5 C7,1.5 2.5,7 2.5,9.3 A4.5,4.5 0 0 0 11.5,9.3 C11.5,7 7,1.5 7,1.5 Z M5,10 A2,2 0 0 0 7,12", T("bloc-humitat")) +
+                Rajola("Pressio", "M2,11 A5.5,5.5 0 1 1 12,11 M7,8 L9.5,5", T("bloc-pressio"));
             string xaml = Recurs("Detall.xaml").Replace("@ESTILS@", Recurs("Estils.xaml")).Replace("@RAJOLES@", rajoles);
             Window w = (Window)LlegeixXaml(AmbPaleta(xaml, p));
             Det g = new Det();
@@ -194,9 +194,9 @@ namespace TempsBarra
             g.RMar.Children.Clear();
             UniformGrid ug = new UniformGrid(); ug.Columns = 3;
             string[][] blocs = {
-                new[] { "Onades", m.Alcada.ToString("0.0", Ca) + " m", m.Estat },
-                new[] { "Del " + PuntCardinal(m.Dir), N(Math.Round(m.Periode)) + " s", "mar de fons " + m.FonsAlcada.ToString("0.0", Ca) + " m" },
-                new[] { "Aigua", m.Aigua != null ? m.Aigua.Value.ToString("0.#", Ca) + " °C" : "--", "temperatura" }
+                new[] { T("mar-onades"), m.Alcada.ToString("0.0", Ca) + " m", m.Estat },
+                new[] { T("mar-direccio", PuntCardinal(m.Dir)), N(Math.Round(m.Periode)) + " s", T("mar-fons", m.FonsAlcada.ToString("0.0", Ca)) },
+                new[] { T("mar-aigua"), m.Aigua != null ? m.Aigua.Value.ToString("0.#", Ca) + " °C" : "--", T("mar-temperatura") }
             };
             foreach (string[] b in blocs)
             {
@@ -215,8 +215,8 @@ namespace TempsBarra
                 string col; if (pl.Bandera == null || !BanderaColors.TryGetValue(pl.Bandera, out col)) col = p["SUB"];
                 pt.Fill = Pinzell(col);
                 fila.Children.Add(pt);
-                string txt = d.Platges.EnTemporada ? pl.Nom + ": bandera " + pl.Bandera + (!string.IsNullOrEmpty(pl.Meduses) ? " · meduses" : "")
-                    : "Temporada de bany acabada · darrer estat: " + d.Platges.Data.ToString("d/M", Inv);
+                string txt = d.Platges.EnTemporada ? T(!string.IsNullOrEmpty(pl.Meduses) ? "platja-resum-meduses" : "platja-resum", pl.Nom, NomBandera(pl.Bandera))
+                    : T("platja-fora-temporada", d.Platges.Data.ToString("d/M", Inv));
                 fila.Children.Add(Text(txt, 12.5, p["SUB"]));
                 tot.Children.Add(fila);
             }
@@ -224,8 +224,8 @@ namespace TempsBarra
         }
 
         static readonly object[][] NivellsUV = {
-            new object[] { 0, "Baix", "#3EA72D" }, new object[] { 3, "Moderat", "#E8D500" }, new object[] { 6, "Alt", "#F18B00" },
-            new object[] { 8, "Molt alt", "#E53210" }, new object[] { 11, "Extrem", "#B567A4" } };
+            new object[] { 0, "uv-0", "#3EA72D" }, new object[] { 3, "uv-1", "#E8D500" }, new object[] { 6, "uv-2", "#F18B00" },
+            new object[] { 8, "uv-3", "#E53210" }, new object[] { 11, "uv-4", "#B567A4" } };   // llindar, clau del text, color
         static int NivellUV(double u)
         {
             int k = 0;
@@ -241,8 +241,8 @@ namespace TempsBarra
             // Precipitació
             Contingut(g.RPluja,
                 Text((d.PlujaAvui ?? 0).ToString("0.#", Ca) + " mm", 26, p["FG"], "SemiBold"),
-                Text("Pluja total prevista avui", 12.5, p["SUB"]),
-                Text("Probabilitat màxima: " + Num(d.PlujaProb) + " %", 12.5, p["SUB"]));
+                Text(T("pluja-total-avui"), 12.5, p["SUB"]),
+                Text(T("pluja-probabilitat-maxima", Num(d.PlujaProb)), 12.5, p["SUB"]));
 
             // Vent: brúixola amb fletxa cap on va el vent
             g.RVent.Children.Clear();
@@ -251,7 +251,7 @@ namespace TempsBarra
             Canvas cv = new Canvas(); cv.Width = 70; cv.Height = 70; cv.Margin = new Thickness(0, 0, 12, 0);
             Ellipse cer = new Ellipse(); cer.Width = 62; cer.Height = 62; cer.Stroke = Pinzell(p["BORDER"]); cer.StrokeThickness = 2;
             Canvas.SetLeft(cer, 4); Canvas.SetTop(cer, 4); cv.Children.Add(cer);
-            foreach (object[] l in new[] { new object[] { "N", 31.0, -3.0 }, new object[] { "E", 64.0, 26.0 }, new object[] { "S", 31.5, 55.0 }, new object[] { "O", -3.0, 26.0 } })
+            foreach (object[] l in new[] { new object[] { T("punt-0"), 31.0, -3.0 }, new object[] { T("punt-4"), 64.0, 26.0 }, new object[] { T("punt-8"), 31.5, 55.0 }, new object[] { T("punt-12"), -3.0, 26.0 } })
             {
                 TextBlock tl = Text((string)l[0], 10, p["SUB"], "SemiBold"); Canvas.SetLeft(tl, (double)l[1]); Canvas.SetTop(tl, (double)l[2]); cv.Children.Add(tl);
             }
@@ -261,8 +261,8 @@ namespace TempsBarra
             gr.Children.Add(cv);
             StackPanel spv = new StackPanel(); spv.VerticalAlignment = VerticalAlignment.Center;
             spv.Children.Add(Text(Graus(d.Vent) + " km/h", 22, p["FG"], "SemiBold"));
-            spv.Children.Add(Text("Des del " + PuntCardinal(d.VentDir ?? 0), 12.5, p["SUB"]));
-            spv.Children.Add(Text("Ratxes: " + Graus(d.Ratxes) + " km/h", 12.5, p["SUB"]));
+            spv.Children.Add(Text(T("vent-des-de", PuntCardinal(d.VentDir ?? 0)), 12.5, p["SUB"]));
+            spv.Children.Add(Text(T("vent-ratxes", Graus(d.Ratxes)), 12.5, p["SUB"]));
             Grid.SetColumn(spv, 1); gr.Children.Add(spv);
             g.RVent.Children.Add(gr);
 
@@ -289,8 +289,8 @@ namespace TempsBarra
                 StackPanel spS = new StackPanel(); spS.HorizontalAlignment = HorizontalAlignment.Center; spS.VerticalAlignment = VerticalAlignment.Center; spS.Width = W;
                 spS.Children.Add(cvS);
                 Grid fila = new Grid(); fila.Margin = new Thickness(0, 6, 0, 0);
-                TextBlock tS = Text("Surt " + d.Sortida.ToString("H:mm", Inv), 13, p["FG"], "SemiBold");
-                TextBlock tP = Text("Es pon " + d.Posta.ToString("H:mm", Inv), 13, p["FG"], "SemiBold"); tP.HorizontalAlignment = HorizontalAlignment.Right;
+                TextBlock tS = Text(T("sol-surt", d.Sortida.ToString("H:mm", Inv)), 13, p["FG"], "SemiBold");
+                TextBlock tP = Text(T("sol-es-pon", d.Posta.ToString("H:mm", Inv)), 13, p["FG"], "SemiBold"); tP.HorizontalAlignment = HorizontalAlignment.Right;
                 fila.Children.Add(tS); fila.Children.Add(tP); spS.Children.Add(fila);
                 g.RSol.Children.Add(spS);
             }
@@ -307,7 +307,7 @@ namespace TempsBarra
                 if (i != idx) e.Opacity = 0.35; else { e.Stroke = Pinzell(p["FG"]); e.StrokeThickness = 1.5; }
                 puntsUV.Children.Add(e);
             }
-            Contingut(g.RUV, Text(N(Math.Round(uv)), 26, p["FG"], "SemiBold"), Text((string)NivellsUV[idx][1], 13, p["FG"], "SemiBold"), puntsUV);
+            Contingut(g.RUV, Text(N(Math.Round(uv)), 26, p["FG"], "SemiBold"), Text(T((string)NivellsUV[idx][1]), 13, p["FG"], "SemiBold"), puntsUV);
 
             // Qualitat de l'aire (índex ICA)
             if (d.Aire != null)
@@ -321,24 +321,24 @@ namespace TempsBarra
                 Ellipse marca = new Ellipse(); marca.Width = 14; marca.Height = 14; marca.Fill = Pinzell(IcaColors[a.Categoria]); marca.Stroke = Pinzell(p["FG"]); marca.StrokeThickness = 2;
                 marca.HorizontalAlignment = HorizontalAlignment.Left; marca.Margin = new Thickness(Math.Min(0.99, a.Posicio) * amp - 7.0, 0, 0, 0);
                 barra.Children.Add(marca);
-                string nomCat = IcaNoms[a.Categoria];
+                string nomCat = IcaNom(a.Categoria);
                 double mida = nomCat.Length > 14 ? 16 : 20;
-                g.RAire.ToolTip = "Índex ICA (MITECO). Mana el contaminant que pitjor està:\n" + a.Detall;
-                Contingut(g.RAire, Text(nomCat, mida, p["FG"], "SemiBold"), Text(a.Nom + ": " + N(Math.Round(a.Valor)) + " µg/m³", 12.5, p["SUB"]), barra);
+                g.RAire.ToolTip = T("aire-ajuda") + "\n" + a.Detall;
+                Contingut(g.RAire, Text(nomCat, mida, p["FG"], "SemiBold"), Text(T("aire-valor", a.Nom, N(Math.Round(a.Valor))), 12.5, p["SUB"]), barra);
             }
             else
             {
-                Contingut(g.RAire, Text("Sense dades", 14, p["SUB"]));
+                Contingut(g.RAire, Text(T("sense-dades"), 14, p["SUB"]));
             }
 
             // Visibilitat
             double km = (d.Visibilitat ?? 0) / 1000;
-            string vt = km >= 20 ? "Excel·lent" : km >= 10 ? "Bona" : km >= 4 ? "Moderada" : km >= 1 ? "Dolenta" : "Boira";
+            string vt = T(km >= 20 ? "visibilitat-4" : km >= 10 ? "visibilitat-3" : km >= 4 ? "visibilitat-2" : km >= 1 ? "visibilitat-1" : "visibilitat-0");
             string kmTxt = km >= 10 ? Math.Round(km).ToString(Inv) : km.ToString("0.#", Ca);
             Contingut(g.RVisib, Text(kmTxt + " km", 26, p["FG"], "SemiBold"), Text(vt, 13, p["FG"], "SemiBold"));
 
             // Humitat
-            Contingut(g.RHumitat, Text(Num(d.Humitat) + " %", 26, p["FG"], "SemiBold"), Text("Punt de rosada: " + Graus(d.Rosada) + " °C", 12.5, p["SUB"]));
+            Contingut(g.RHumitat, Text(Num(d.Humitat) + " %", 26, p["FG"], "SemiBold"), Text(T("humitat-rosada", Graus(d.Rosada)), 12.5, p["SUB"]));
 
             // Pressió: indicador d'arc entre 970 i 1050 hPa
             g.RPressio.Children.Clear();
@@ -352,7 +352,7 @@ namespace TempsBarra
             TextBlock tu = Text("hPa", 11, p["SUB"]); tu.Width = 96; tu.TextAlignment = TextAlignment.Center;
             Canvas.SetTop(tu, 56); cvP.Children.Add(tu);
             g.RPressio.Children.Add(cvP);
-            g.RPressio.ToolTip = pr >= 1020 ? "Pressió alta: temps estable" : (pr <= 1005 ? "Pressió baixa: temps inestable" : "Pressió normal");
+            g.RPressio.ToolTip = T(pr >= 1020 ? "pressio-alta" : (pr <= 1005 ? "pressio-baixa" : "pressio-normal"));
         }
 
         static void ActualitzaHoresDies(Dades d)
@@ -418,13 +418,13 @@ namespace TempsBarra
                 gIcona.Child = Icona(d.Categoria, d.Dia, clarBarra);
                 gTemp.Text = Graus(d.Temp) + " °C";
                 gDesc.Text = d.Estat;
-                giny.ToolTip = Nom(principal) + ": " + Graus(d.Temp) + " °C, " + d.Estat.ToLower();
+                giny.ToolTip = T("giny-ajuda", Nom(principal), Graus(d.Temp), d.Estat.ToLower());
             }
             catch (Exception ex)
             {
                 gIcona.Child = null;
                 gTemp.Text = "-- °C";
-                gDesc.Text = "Sense connexió";
+                gDesc.Text = T("sense-connexio");
                 darreraErr = ex.ToString();
             }
         }
@@ -442,17 +442,17 @@ namespace TempsBarra
                 g.FIcona.Child = Icona(d.Categoria, d.Dia, ModeClar());
                 g.FTemp.Text = Graus(d.Temp) + "°";
                 g.FDesc.Text = d.Estat;
-                g.FSensacio.Text = "Sensació tèrmica de " + Graus(d.Sensacio) + " °C";
-                g.FMaxMin.Text = "Màxima " + Graus(d.Max) + "° · Mínima " + Graus(d.Min) + "°";
+                g.FSensacio.Text = T("ara-sensacio", Graus(d.Sensacio));
+                g.FMaxMin.Text = T("ara-maxmin", Graus(d.Max), Graus(d.Min));
                 g.FResum.Text = d.Resum;
-                g.FHora.Text = "Actualitzat a les " + d.HoraText;
-                g.FFont.Text = d.Models > 1 ? "Dades: Open-Meteo · mitjana de " + d.Models + " models" : "Dades: Open-Meteo";
+                g.FHora.Text = T("ara-actualitzat", d.HoraText);
+                g.FFont.Text = d.Models > 1 ? T("ara-font-models", d.Models) : T("ara-font");
                 ActualitzaHoresDies(d);
                 ActualitzaRajoles(d);
             }
             catch (Exception ex)
             {
-                g.FHora.Text = "Sense connexió. Ho tornaré a provar d'aquí a una estona.";
+                g.FHora.Text = T("ara-sense-connexio");
                 darreraErr = ex.ToString();
             }
             ActualitzaPastilles();
@@ -489,12 +489,12 @@ namespace TempsBarra
                 bool sel = i == Vist;
                 b.Background = Pinzell(sel ? p["SEL"] : p["CARD"]);
                 b.BorderBrush = Pinzell(sel ? p["ACCENT"] : p["BORDER"]); b.BorderThickness = new Thickness(1);
-                b.ToolTip = "Clic: mira el temps d'aquí · Botó dret: opcions";
+                b.ToolTip = T("lloc-ajuda");
                 StackPanel sp = new StackPanel(); sp.Orientation = Orientation.Horizontal;
                 if (i == 0)
                 {
                     TextBlock st = new TextBlock(); st.Text = ((char)0xE735).ToString(); st.FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets");
-                    st.FontSize = 11; st.Foreground = Pinzell(p["ACCENT"]); st.VerticalAlignment = VerticalAlignment.Center; st.Margin = new Thickness(0, 0, 6, 0); st.ToolTip = "Lloc principal (el de la barra)";
+                    st.FontSize = 11; st.Foreground = Pinzell(p["ACCENT"]); st.VerticalAlignment = VerticalAlignment.Center; st.Margin = new Thickness(0, 0, 6, 0); st.ToolTip = T("lloc-principal");
                     sp.Children.Add(st);
                 }
                 Dades dd = DadesBreus(l);
@@ -505,11 +505,11 @@ namespace TempsBarra
                 b.MouseLeftButtonUp += (s, e) => TriaLloc((int)((Border)s).Tag);
                 ContextMenu cm = new ContextMenu();
                 cm.Style = (Style)g.W.FindResource(typeof(ContextMenu));
-                cm.Items.Add(ElementMenu("Fes-lo principal", "principal", i, i > 0));
-                cm.Items.Add(ElementMenu("Canvia el nom...", "nom", i));
-                cm.Items.Add(ElementMenu("Mou a l'esquerra", "esquerra", i, i > 0));
-                cm.Items.Add(ElementMenu("Mou a la dreta", "dreta", i, i < llocs.Count - 1));
-                cm.Items.Add(ElementMenu("Treu-lo de la llista", "treu", i, llocs.Count > 1));
+                cm.Items.Add(ElementMenu(T("lloc-fes-principal"), "principal", i, i > 0));
+                cm.Items.Add(ElementMenu(T("lloc-canvia-nom-menu"), "nom", i));
+                cm.Items.Add(ElementMenu(T("lloc-mou-esquerra"), "esquerra", i, i > 0));
+                cm.Items.Add(ElementMenu(T("lloc-mou-dreta"), "dreta", i, i < llocs.Count - 1));
+                cm.Items.Add(ElementMenu(T("lloc-treu"), "treu", i, llocs.Count > 1));
                 cm.Opened += (s, e) => menuObert = true;
                 cm.Closed += (s, e) => { menuObert = false; if (det.W.IsVisible) det.W.Activate(); };
                 b.ContextMenu = cm;
@@ -518,12 +518,12 @@ namespace TempsBarra
             // Pastilla per afegir un lloc
             Border mes = new Border();
             mes.CornerRadius = new CornerRadius(17); mes.Padding = new Thickness(12, 5, 14, 5); mes.Cursor = Cursors.Hand; mes.Background = Pinzell(p["CARD"]);
-            mes.BorderBrush = Pinzell(p["BORDER"]); mes.BorderThickness = new Thickness(1); mes.ToolTip = "Afegeix un lloc";
+            mes.BorderBrush = Pinzell(p["BORDER"]); mes.BorderThickness = new Thickness(1); mes.ToolTip = T("lloc-afegeix-ajuda");
             StackPanel spm = new StackPanel(); spm.Orientation = Orientation.Horizontal;
             TextBlock plu = new TextBlock(); plu.Text = ((char)0xE710).ToString(); plu.FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets");
             plu.FontSize = 11; plu.Foreground = Pinzell(p["FG"]); plu.VerticalAlignment = VerticalAlignment.Center; plu.Margin = new Thickness(0, 0, 6, 0);
             spm.Children.Add(plu);
-            TextBlock tx = Text("Afegeix", 13, p["FG"]); tx.VerticalAlignment = VerticalAlignment.Center; spm.Children.Add(tx);
+            TextBlock tx = Text(T("lloc-afegeix"), 13, p["FG"]); tx.VerticalAlignment = VerticalAlignment.Center; spm.Children.Add(tx);
             mes.Child = spm;
             mes.MouseLeftButtonUp += (s, e) => AfegeixLloc();
             g.Pastilles.Children.Add(mes);
@@ -576,7 +576,7 @@ namespace TempsBarra
                 case "treu": if (ll.Count > 1) { ll.RemoveAt(i); if (vist == Conf.Llocs[i]) vist = ll[0]; } break;
                 case "nom":
                     string nou = null;
-                    Dialeg(() => { nou = DemanaText.Mostra("Canvia el nom", Nom(ll[i])); });
+                    Dialeg(() => { nou = DemanaText.Mostra(T("lloc-canvia-nom"), Nom(ll[i])); });
                     if (!string.IsNullOrEmpty(nou)) ll[i]["nom"] = nou;
                     break;
             }
@@ -600,6 +600,26 @@ namespace TempsBarra
             ActualitzaTemps(false);
             tancatA = null;
             MostraDetall();
+        }
+
+        // Canvia la llengua: es desa, es tornen a fer els textos i el panell, i es torna al «Quant a»
+        static void CanviaLlengua(string codi)
+        {
+            Conf.Llengua = codi;
+            DesaConfig(Conf);
+            TriaLlengua(codi);
+            Registre("Llengua: " + Llengua + (codi == null ? " (la del Windows)" : ""));
+            cache.Clear();
+            EstatActualitzacio = null;
+            AturaRadar();
+            Window vella = det.W;
+            det = NovaFinestraDetall();
+            mapaClau = null;
+            vella.Close();
+            ActualitzaTemps(false);
+            tancatA = null;
+            MostraDetall();
+            MostraSubpagina("QuantA");
         }
 
         public static void MostraDetall()

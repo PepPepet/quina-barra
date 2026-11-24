@@ -56,21 +56,21 @@ namespace TempsBarra
                     VersioNova = remota.ToString();
                     UrlNova = J.S(J.G(d, "html_url"));
                     if (string.IsNullOrEmpty(UrlNova)) UrlNova = UrlRepo + "/releases/latest";
-                    return "Tens la " + Versio + " i ja ha sortit la " + VersioNova + ".";
+                    return T("actualitzacio-nova", Versio, VersioNova);
                 }
                 VersioNova = null; UrlNova = null;
-                return "Tens la versió " + Versio + ", que és la darrera.";
+                return T("actualitzacio-darrera", Versio);
             }
             catch (WebException ex)
             {
                 HttpWebResponse r = ex.Response as HttpWebResponse;
-                if (r != null && r.StatusCode == HttpStatusCode.NotFound) return "Tens la versió " + Versio + ". Encara no n'hi ha cap de publicada a GitHub.";
-                return "No s'ha pogut comprovar: sense connexió amb GitHub.";
+                if (r != null && r.StatusCode == HttpStatusCode.NotFound) return T("actualitzacio-cap-publicada", Versio);
+                return T("actualitzacio-sense-connexio");
             }
             catch (Exception ex)
             {
                 Registre("Error cercant actualitzacions: " + ex.Message);
-                return "No s'ha pogut comprovar ara mateix.";
+                return T("actualitzacio-error");
             }
         }
 
@@ -107,12 +107,12 @@ namespace TempsBarra
             if (VersioNova != null)
             {
                 det.BQuantA.Foreground = Pinzell(det.P["ACCENT"]);
-                det.BQuantA.ToolTip = "Més opcions · hi ha una versió nova (" + VersioNova + ")";
+                det.BQuantA.ToolTip = T("menu-ajuda-versio-nova", VersioNova);
             }
             else
             {
                 det.BQuantA.ClearValue(Control.ForegroundProperty);
-                det.BQuantA.ToolTip = "Més opcions";
+                det.BQuantA.ToolTip = T("menu-ajuda");
             }
         }
 

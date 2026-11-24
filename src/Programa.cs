@@ -46,7 +46,7 @@ namespace TempsBarra
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
             if (args.Length > 0 && (args[0].Equals("/prova", StringComparison.OrdinalIgnoreCase) || args[0].Equals("-prova", StringComparison.OrdinalIgnoreCase)))
-                return ProvaGiny.Executa(args.Length > 1 ? args[1] : null);
+                return ProvaGiny.Executa(args.Length > 1 ? args[1] : null, args.Length > 2 ? args[2] : null);
 
             // Una sola instància
             bool creat;
@@ -62,11 +62,12 @@ namespace TempsBarra
 
             Vist = 0;
             Conf = LlegeixConfig();
+            TriaLlengua(Conf != null ? Conf.Llengua : null);
             if (Conf != null) Registre("Arrencada: " + Conf.Llocs.Count + " llocs (" + string.Join(", ", Conf.Llocs.Select(l => Nom(l))) + ")");
             if (Conf == null && File.Exists(FitxerConf))
             {
                 Registre("Arrencada: hi ha config.json però no s'ha pogut llegir; no es demana cap lloc nou");
-                MessageBox.Show("No he pogut llegir els teus llocs desats (" + FitxerConf + ").\n\nNo he tocat res. Torna a engegar el giny d'aquí a un moment.",
+                MessageBox.Show(T("error-config", FitxerConf),
                     "Quina Barra!", MessageBoxButton.OK, MessageBoxImage.Warning);
                 mutex.ReleaseMutex(); return 0;
             }
@@ -213,7 +214,8 @@ namespace TempsBarra
             catch (Exception ex) { informe.Add("ERROR en desar " + nom + ": " + ex); }
         }
 
-        public static int Executa(string dir)
+        // llengua: opcional, per fer les captures en una llengua concreta sense tocar la configuració
+        public static int Executa(string dir, string llengua)
         {
             carpeta = dir ?? Path.Combine(Path.GetTempPath(), "QuinaBarra-prova");
             Directory.CreateDirectory(carpeta);
@@ -228,6 +230,8 @@ namespace TempsBarra
                 G.Vist = 0;
                 G.Conf = G.LlegeixConfig();
                 if (G.Conf == null) { informe.Add("ERROR: no hi ha configuració llegible a " + G.FitxerConf); return Acaba(1); }
+                G.TriaLlengua(llengua ?? G.Conf.Llengua);
+                informe.Add("Llengua: " + G.Llengua + " (disponibles: " + string.Join(", ", G.LlenguesDisponibles()) + ")");
                 informe.Add("Configuració: " + G.Conf.Llocs.Count + " llocs (" + string.Join(", ", G.Conf.Llocs.Select(l => G.Nom(l))) + "), tema " + (G.Conf.Tema ?? "null"));
 
                 // Giny (fora de la pantalla; no es col·loca a la barra)
@@ -298,7 +302,7 @@ namespace TempsBarra
                 t.W.Close();
 
                 // Diàleg per canviar el nom
-                DemanaText dt = new DemanaText("Canvia el nom", G.Nom(G.Conf.Llocs[0]));
+                DemanaText dt = new DemanaText(G.T("lloc-canvia-nom"), G.Nom(G.Conf.Llocs[0]));
                 dt.W.WindowStartupLocation = WindowStartupLocation.Manual;
                 dt.W.Left = -3000; dt.W.Top = -3000; dt.W.ShowActivated = false;
                 dt.W.Show();
@@ -306,6 +310,7 @@ namespace TempsBarra
                 dt.W.Close();
             }
             catch (Exception ex) { informe.Add("ERROR: " + ex); return Acaba(1); }
+            if (G.TextsQueFalten.Count > 0) informe.Add("ERROR: claus sense text: " + string.Join(", ", G.TextsQueFalten));
             informe.Add("Temps total: " + rt.ElapsedMilliseconds + " ms");
             return Acaba(0);
         }

@@ -6,7 +6,7 @@
       <Viewbox x:Name="Icona" Width="28" Height="28" Margin="0,0,9,0" VerticalAlignment="Center"/>
       <StackPanel VerticalAlignment="Center">
         <TextBlock x:Name="Temp" FontSize="12.5" FontWeight="SemiBold" Text="-- °C"/>
-        <TextBlock x:Name="Desc" FontSize="12" Opacity="0.78" Text="Carregant..."/>
+        <TextBlock x:Name="Desc" FontSize="12" Opacity="0.78" Text="@T:giny-carregant@"/>
       </StackPanel>
     </StackPanel>
   </Border>

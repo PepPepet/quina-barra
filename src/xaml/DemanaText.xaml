@@ -10,8 +10,8 @@
         <TextBox x:Name="T" Background="Transparent" BorderThickness="0" Foreground="@FG@" CaretBrush="@FG@" FontSize="14" Padding="9,0" VerticalContentAlignment="Center"/>
       </Border>
       <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,18,0,0">
-        <Button x:Name="BNo" Content="Cancel·la" MinWidth="100"/>
-        <Button x:Name="BSi" Style="{StaticResource Accent}" Content="Desa" MinWidth="100" Margin="8,0,0,0"/>
+        <Button x:Name="BNo" Content="@T:boto-cancela@" MinWidth="100"/>
+        <Button x:Name="BSi" Style="{StaticResource Accent}" Content="@T:boto-desa@" MinWidth="100" Margin="8,0,0,0"/>
       </StackPanel>
     </StackPanel>
   </Border>

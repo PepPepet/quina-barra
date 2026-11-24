@@ -71,7 +71,7 @@ namespace TempsBarra
             string q = TCerca.Text.Trim();
             if (q.Length < 2) return;
             Llista.Items.Clear(); BDesa.IsEnabled = false;
-            Estat.Text = "Cercant...";
+            Estat.Text = G.T("tria-cercant");
             W.Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Background);
             HashSet<string> vistos = new HashSet<string>();
             List<Dictionary<string, object>> tots = new List<Dictionary<string, object>>();
@@ -136,8 +136,8 @@ namespace TempsBarra
                 .ThenBy(x => G.Clau(Nom(x)) == clauQ ? 0 : 1)
                 .ThenBy(x => -(J.D(J.G(x, "population")) ?? 0))
                 .ToList();
-            if (Resultats.Count == 0) { Estat.Text = "No he trobat res. Prova-ho sense l'article o amb un altre nom."; return; }
-            Estat.Text = Resultats.Count == 1 ? "1 resultat" : Resultats.Count + " resultats";
+            if (Resultats.Count == 0) { Estat.Text = G.T("tria-cap-resultat"); return; }
+            Estat.Text = G.T("tria-n-resultats", Resultats.Count);
             foreach (Dictionary<string, object> x in Resultats)
             {
                 string nom = Nom(x);

@@ -41,12 +41,14 @@ namespace TempsBarra
         public static string Recurs(string nom)
         {
             string t;
-            if (recursos.TryGetValue(nom, out t)) return t;
-            using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("TempsBarra." + nom))
-            using (StreamReader r = new StreamReader(s, Encoding.UTF8, true))
-                t = r.ReadToEnd();
-            recursos[nom] = t;
-            return t;
+            if (!recursos.TryGetValue(nom, out t))
+            {
+                using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("TempsBarra." + nom))
+                using (StreamReader r = new StreamReader(s, Encoding.UTF8, true))
+                    t = r.ReadToEnd();
+                recursos[nom] = t;
+            }
+            return TradueixXaml(t);
         }
 
         // XAML d'una finestra amb els estils comuns i la paleta
@@ -153,12 +155,15 @@ namespace TempsBarra
         // Número dins d'un text, com l'escrivia PowerShell
         public static string N(double v) { return v.ToString(Inv); }
 
+        // Punt cardinal abreujat (16 direccions: punt-0 = N, punt-4 = E, punt-8 = S, punt-12 = O)
         public static string PuntCardinal(double graus)
         {
-            string[] noms = { "N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSO", "SO", "OSO", "O", "ONO", "NO", "NNO" };
             int i = (int)Math.Round((graus % 360) / 22.5) % 16;
             if (i < 0) i += 16;
-            return noms[i];
+            return T("punt-" + i);
         }
+
+        // Text dins d'un atribut XAML
+        public static string XmlText(string s) { return System.Security.SecurityElement.Escape(s); }
     }
 }

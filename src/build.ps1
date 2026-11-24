@@ -30,6 +30,8 @@ $opcions = @(
 )
 # Els XAML van dins de l'exe com a recursos (TempsBarra.<nom>.xaml)
 foreach ($x in Get-ChildItem (Join-Path $src 'xaml') -Filter *.xaml) { $opcions += "/resource:$($x.FullName),TempsBarra.$($x.Name)" }
+# Els textos de cada llengua també (TempsBarra.textos.<codi>.json)
+foreach ($t in Get-ChildItem (Join-Path $src 'textos') -Filter *.json) { $opcions += "/resource:$($t.FullName),TempsBarra.textos.$($t.Name)" }
 $opcions += (Get-ChildItem $src -Filter *.cs | ForEach-Object { $_.FullName })
 
 & $csc @opcions

@@ -13,7 +13,7 @@ namespace TempsBarra
 {
     class InfoBloc
     {
-        public string Id, Nom; public bool Ample;
+        public string Id, Nom; public bool Ample;   // Nom: clau del text
         public InfoBloc(string id, string nom, bool ample) { Id = id; Nom = nom; Ample = ample; }
     }
 
@@ -23,19 +23,19 @@ namespace TempsBarra
     {
         // Ordre original. Els blocs amples ocupen tota l'amplada; els petits van de dos en dos.
         static readonly InfoBloc[] TotsBlocs = {
-            new InfoBloc("Resum", "Què ens espera", true),
-            new InfoBloc("Hores", "Pròximes 24 hores", true),
-            new InfoBloc("Dies", "Pròxims 10 dies", true),
-            new InfoBloc("Pluja", "Precipitació", false),
-            new InfoBloc("Vent", "Vent", false),
-            new InfoBloc("Sol", "Sortida i posta del sol", false),
-            new InfoBloc("UV", "Índex UV", false),
-            new InfoBloc("Aire", "Qualitat de l'aire", false),
-            new InfoBloc("Visib", "Visibilitat", false),
-            new InfoBloc("Humitat", "Humitat", false),
-            new InfoBloc("Pressio", "Pressió", false),
-            new InfoBloc("Mar", "Mar (només als llocs de costa)", true),
-            new InfoBloc("Radar", "Radar de pluja", true)
+            new InfoBloc("Resum", "bloc-resum", true),
+            new InfoBloc("Hores", "bloc-hores", true),
+            new InfoBloc("Dies", "bloc-dies", true),
+            new InfoBloc("Pluja", "bloc-pluja", false),
+            new InfoBloc("Vent", "bloc-vent", false),
+            new InfoBloc("Sol", "bloc-sol", false),
+            new InfoBloc("UV", "bloc-uv", false),
+            new InfoBloc("Aire", "bloc-aire", false),
+            new InfoBloc("Visib", "bloc-visibilitat", false),
+            new InfoBloc("Humitat", "bloc-humitat", false),
+            new InfoBloc("Pressio", "bloc-pressio", false),
+            new InfoBloc("Mar", "bloc-mar-personalitza", true),
+            new InfoBloc("Radar", "bloc-radar", true)
         };
 
         static InfoBloc Info(string id) { return TotsBlocs.FirstOrDefault(b => b.Id == id); }
@@ -148,8 +148,8 @@ namespace TempsBarra
         static void PaginaPersonalitza()
         {
             Dictionary<string, string> p = det.P;
-            det.SubTitol.Text = "Personalitza el panell";
-            Paragraf("", "Tria quins blocs vols veure i en quin ordre. Les rajoles petites van de dues en dues; si en queda una de sola, ocupa tota l'amplada. El que amaguis ja no es baixa d'internet, i el giny va més lleuger.");
+            det.SubTitol.Text = T("personalitza-titol");
+            Paragraf("", T("personalitza-explicacio"));
             StackPanel sp = Targeta();
             List<EstatBloc> ordre = OrdreBlocs();
             for (int i = 0; i < ordre.Count; i++)
@@ -162,7 +162,7 @@ namespace TempsBarra
                 fila.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
                 CheckBox chk = new CheckBox(); chk.IsChecked = eb.Visible; chk.VerticalAlignment = VerticalAlignment.Center; chk.Margin = new Thickness(0, 0, 10, 0);
-                chk.ToolTip = eb.Visible ? "Amaga'l" : "Mostra'l";
+                chk.ToolTip = eb.Visible ? T("personalitza-amaga") : T("personalitza-mostra");
                 string id = eb.Id;
                 bool calen = id == "Aire" || id == "Mar";
                 chk.Checked += (s, e) => CanviaBloc(o => o[idx].Visible = true, calen);
@@ -170,20 +170,20 @@ namespace TempsBarra
                 fila.Children.Add(chk);
 
                 StackPanel noms = new StackPanel(); noms.VerticalAlignment = VerticalAlignment.Center;
-                TextBlock tn = Text(info.Nom, 13.5, p["FG"], "SemiBold"); if (!eb.Visible) tn.Opacity = 0.5;
+                TextBlock tn = Text(T(info.Nom), 13.5, p["FG"], "SemiBold"); if (!eb.Visible) tn.Opacity = 0.5;
                 noms.Children.Add(tn);
-                noms.Children.Add(Text(info.Ample ? "tota l'amplada" : "rajola petita", 11.5, p["SUB"]));
+                noms.Children.Add(Text(info.Ample ? T("personalitza-ample") : T("personalitza-petita"), 11.5, p["SUB"]));
                 Grid.SetColumn(noms, 1); fila.Children.Add(noms);
 
-                Button amunt = BotoGlif("", "Puja'l"); amunt.IsEnabled = i > 0;
+                Button amunt = BotoGlif("", T("personalitza-puja")); amunt.IsEnabled = i > 0;
                 amunt.Click += (s, e) => CanviaBloc(o => { EstatBloc x = o[idx]; o.RemoveAt(idx); o.Insert(idx - 1, x); }, false);
                 Grid.SetColumn(amunt, 2); fila.Children.Add(amunt);
-                Button avall = BotoGlif("", "Baixa'l"); avall.IsEnabled = i < ordre.Count - 1;
+                Button avall = BotoGlif("", T("personalitza-baixa")); avall.IsEnabled = i < ordre.Count - 1;
                 avall.Click += (s, e) => CanviaBloc(o => { EstatBloc x = o[idx]; o.RemoveAt(idx); o.Insert(idx + 1, x); }, false);
                 Grid.SetColumn(avall, 3); fila.Children.Add(avall);
                 sp.Children.Add(fila);
             }
-            Button rest = new Button(); rest.Content = "Restableix l'ordre original"; rest.Margin = new Thickness(4, 12, 4, 0);
+            Button rest = new Button(); rest.Content = T("personalitza-restableix"); rest.Margin = new Thickness(4, 12, 4, 0);
             rest.HorizontalAlignment = HorizontalAlignment.Left;
             rest.Click += (s, e) => CanviaBloc(o => { o.Clear(); foreach (InfoBloc b in TotsBlocs) o.Add(new EstatBloc { Id = b.Id, Visible = true }); }, true);
             det.SubCos.Children.Add(rest);
@@ -220,9 +220,9 @@ namespace TempsBarra
         {
             ContextMenu cm = new ContextMenu();
             cm.Style = (Style)det.W.FindResource(typeof(ContextMenu));
-            cm.Items.Add(OpcioMenu("\uE70F", "Personalitza el panell", () => MostraSubpagina("Personalitza")));
-            cm.Items.Add(OpcioMenu("\uE946", VersioNova != null ? "Quant a  ·  hi ha una versió nova" : "Quant a", () => MostraSubpagina("QuantA")));
-            cm.Items.Add(OpcioMenu("\uE8BB", "Tanca el giny", () => app.Shutdown()));
+            cm.Items.Add(OpcioMenu("\uE70F", T("personalitza-titol"), () => MostraSubpagina("Personalitza")));
+            cm.Items.Add(OpcioMenu("\uE946", VersioNova != null ? T("menu-quant-a-versio-nova") : T("menu-quant-a"), () => MostraSubpagina("QuantA")));
+            cm.Items.Add(OpcioMenu("\uE8BB", T("menu-tanca"), () => app.Shutdown()));
             cm.Opened += (s, e) => menuObert = true;
             cm.Closed += (s, e) => { menuObert = false; if (det.W.IsVisible) det.W.Activate(); };
             cm.PlacementTarget = det.BQuantA;
