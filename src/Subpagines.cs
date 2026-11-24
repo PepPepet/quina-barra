@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.0 · el temps del teu poble a la barra de tasques, en català
+﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Pàgines de detall de les rajoles, «Quant a» i el mapa de radar.
 using System;
@@ -552,7 +552,7 @@ namespace TempsBarra
                 byte[] bytes;
                 using (WebClient wc = new WebClient())
                 {
-                    wc.Headers.Add("User-Agent", "QuinaBarra/1.0 (giny del temps en catala per a Windows)");
+                    wc.Headers.Add("User-Agent", "QuinaBarra/1.1 (giny del temps per a Windows)");
                     bytes = wc.DownloadData("https://tile.openstreetmap.org/" + z + "/" + x + "/" + y + ".png");
                 }
                 MemoryStream ms = new MemoryStream(bytes);

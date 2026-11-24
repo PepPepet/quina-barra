@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.0 · el temps del teu poble a la barra de tasques, en català
+﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Cerca actualitzacions (a les «releases» de GitHub) i opció «Engega amb el Windows».
 // No baixa ni instal·la res sol: avisa i obre la pàgina de la versió nova.

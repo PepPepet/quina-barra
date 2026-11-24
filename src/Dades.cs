@@ -1,4 +1,4 @@
-﻿// Quina Barra! · versió 1.0 · el temps del teu poble a la barra de tasques, en català
+﻿// Quina Barra! · versió 1.1 · el temps del teu poble a la barra de tasques, en català i altres llengües
 // Copyright (c) 2026 Pep Payo · https://peppayo.com · llicència MIT (vegeu LICENSE)
 // Dades del temps: Open-Meteo (previsió, aire, mar), platges de la Generalitat i càlculs.
 using System;
@@ -49,7 +49,7 @@ namespace TempsBarra
 
     static partial class G
     {
-        public const string UserAgent = "QuinaBarra/1.0";
+        public const string UserAgent = "QuinaBarra/1.1";
 
         // Codis WMO del temps que fa servir Open-Meteo → clau del text
         static readonly Dictionary<int, string> Estats = new Dictionary<int, string> {

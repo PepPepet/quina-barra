@@ -1,6 +1,8 @@
-# Quina Barra!
+﻿# Quina Barra!
 
 *El temps del teu poble a la barra de tasques, en català.*
+
+<sub>El temps del teu poble a la barra de tasques, en valencià · O tempo da túa vila na barra de tarefas, en galego · Zure herriko eguraldia ataza-barran, euskaraz · El tiempu del to pueblu na barra de xeres, n'asturianu · O tiempo d'o tuyo lugar en a barra de fayenas, en aragonés · Lo temps de ton vilatge dins la barra de prètzfaches, en occitan · Eth temps deth tòn pòble ena barra de prètzhèts, en aranés · Lo temps de la tua vila a la barra de tasques, en alguerés.</sub>
 
 Giny per a Windows 11 que posa **el temps del teu poble** a l'esquerra de la barra de tasques, on hi havia el giny del temps de Hasefroch (sí, aquell que de vegades et parla en àrab), però **en català** i sense notícies ni anuncis.
 
@@ -25,6 +27,7 @@ Giny per a Windows 11 que posa **el temps del teu poble** a l'esquerra de la bar
 - **Radar de pluja** de les últimes 2 hores, animat, sobre un mapa d'OpenStreetMap.
 - **Personalitza el panell**: tria quins blocs vols veure i en quin ordre. El que amaguis ja no es baixa d'internet.
 - Als municipis de Catalunya, enllaç directe a la previsió de **Meteocat**.
+- **En nou llengües**: català, valencià, gallec, basc, asturià, aragonès, occità, aranès i alguerès. Agafa la del Windows si la té, i la pots canviar al **Quant a**.
 - Mode clar, fosc o com el Windows. S'amaga quan mires un vídeo a pantalla completa.
 - Lleuger: uns 100 MB de memòria i pràcticament gens de processador.
 
@@ -49,9 +52,30 @@ Un cop al dia mira si hi ha una versió nova. No la baixa ni la instal·la pel s
 - **Pastilles de llocs**: un clic hi salta; **+ Afegeix** en desa un de nou; amb el **botó dret** el pots fer principal, canviar-li el nom, moure'l o treure'l. El principal (★) és el que surt a la barra.
 - **Menú ⋯**: Personalitza el panell, Quant a i Tanca el giny.
 
+## Llengües
+
+| Llengua | Fitxer |
+|---|---|
+| Català (original) | `src/textos/ca.json` |
+| Valencià | `src/textos/ca-valencia.json` |
+| Gallec | `src/textos/gl.json` |
+| Basc | `src/textos/eu.json` |
+| Asturià | `src/textos/ast.json` |
+| Aragonès | `src/textos/an.json` |
+| Occità | `src/textos/oc.json` |
+| Aranès | `src/textos/oc-aranes.json` |
+| Alguerès | `src/textos/ca-alguer.json` |
+
+<p>
+  <img src="docs/captures/panell-gl.png" width="380" alt="Panell en gallec">
+  <img src="docs/captures/panell-eu.png" width="380" alt="Panell en basc">
+</p>
+
+Som de Catalunya i el giny l'hem fet en català. Les altres llengües les hem traduït amb l'ajuda de Claude, la IA d'Anthropic, i les hem revisat amb cura, però no som lingüistes: si hi trobes errors, els suggeriments són benvinguts. El giny tria la llengua del Windows si la té (el Windows té català, valencià, gallec i basc) i, si no, la pots triar a mà al **Quant a**. Cada llengua és un fitxer de text al format de jquery.i18n; `src/textos/qqq.json` explica on surt cada text.
+
 ## On desa les coses i com es desinstal·la
 
-La configuració és a `%APPDATA%\QuinaBarra\` (`config.json`, una còpia `config.bak` i un registre petit `registre.log`).
+La configuració és a `%APPDATA%\QuinaBarra\` (`config.json`, amb els llocs, el mode i la llengua; una còpia `config.bak` i un registre petit `registre.log`).
 
 Per desinstal·lar-lo: desmarca **Engega amb el Windows**, tria **Tanca el giny** i esborra `QuinaBarra.exe` i la carpeta `%APPDATA%\QuinaBarra`.
 
@@ -76,7 +100,7 @@ El codi font és a `src\` (C#, .NET Framework 4.8, que ja porta el Windows). No 
 powershell -NoProfile -ExecutionPolicy Bypass -File src\build.ps1
 ```
 
-L'`.exe` surt a `exe\QuinaBarra.exe`. Amb `QuinaBarra.exe /prova <carpeta>` en fa captures de totes les pantalles sense tocar la configuració.
+L'`.exe` surt a `exe\QuinaBarra.exe`. Amb `QuinaBarra.exe /prova <carpeta> [llengua]` en fa captures de totes les pantalles sense tocar la configuració (per exemple, `/prova C:\captures gl` les fa en gallec) i avisa si falta algun text.
 
 Els suggeriments i els errors, a les [incidències](https://github.com/PepPepet/quina-barra/issues), en català.
 

@@ -2,6 +2,16 @@
 
 Totes les versions de **Quina Barra!**, de la més nova a la més antiga.
 
+## [1.1] · 24/11/2026
+
+Ara parla nou llengües.
+
+- **Llengües noves:** valencià, gallec, basc, asturià, aragonès, occità, aranès i alguerès, a més del català. Traduïdes amb l'ajuda de Claude i revisades amb la norma de cada llengua; no som lingüistes, així que els suggeriments són benvinguts.
+- El giny agafa la llengua del Windows si la té; si no, surt en català. Es pot canviar a **Quant a** → **Llengua**, i es desa a la configuració.
+- Els textos ja no són dins del codi: cada llengua és un fitxer a `src/textos/` (format jquery.i18n), amb una nota per a cada text que explica on surt.
+- `/prova <carpeta> <llengua>` fa les captures en la llengua que triïs i avisa si falta algun text.
+- En català, el giny es veu i funciona exactament igual que la 1.0.
+
 ## [1.0] · 23/11/2026
 
 Primera versió publicada.
