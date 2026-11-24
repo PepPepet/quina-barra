@@ -73,20 +73,40 @@ namespace TempsBarra
             Llista.Items.Clear(); BDesa.IsEnabled = false;
             Estat.Text = G.T("tria-cercant");
             W.Dispatcher.Invoke(new Action(() => { }), DispatcherPriority.Background);
-            HashSet<string> vistos = new HashSet<string>();
-            List<Dictionary<string, object>> tots = new List<Dictionary<string, object>>();
-            foreach (string variant in new[] { q, G.TreuAccents(q) }.Distinct(StringComparer.Ordinal))
-            {
-                try
+            // Es busca en la llengua del giny i també en català i en castellà, perquè cadascú escriu el nom com el coneix
+            // (Iruña, Pamplona; Donostia, Sant Sebastià). Els noms que es mostren són els de la llengua del giny,
+            // llevat dels municipis de Catalunya, que surten amb el nom oficial en català.
+            string llG = G.LlenguaCercador();
+            Dictionary<string, Dictionary<string, Dictionary<string, object>>> perId = new Dictionary<string, Dictionary<string, Dictionary<string, object>>>();
+            List<string> ordre = new List<string>();
+            foreach (string lg in new[] { llG, "ca", "es" }.Distinct(StringComparer.Ordinal))
+                foreach (string variant in new[] { q, G.TreuAccents(q) }.Distinct(StringComparer.Ordinal))
                 {
-                    object r = G.Web("https://geocoding-api.open-meteo.com/v1/search?count=15&language=ca&format=json&name=" + Uri.EscapeDataString(variant));
-                    foreach (object o in J.A(J.G(r, "results")))
+                    try
                     {
-                        Dictionary<string, object> x = o as Dictionary<string, object>;
-                        if (x != null && vistos.Add(J.S(J.G(x, "id")) ?? "")) tots.Add(x);
+                        object r = G.Web("https://geocoding-api.open-meteo.com/v1/search?count=15&language=" + lg + "&format=json&name=" + Uri.EscapeDataString(variant));
+                        foreach (object o in J.A(J.G(r, "results")))
+                        {
+                            Dictionary<string, object> x = o as Dictionary<string, object>;
+                            if (x == null) continue;
+                            string id = J.S(J.G(x, "id")) ?? "";
+                            if (!perId.ContainsKey(id)) { perId[id] = new Dictionary<string, Dictionary<string, object>>(); ordre.Add(id); }
+                            if (!perId[id].ContainsKey(lg)) perId[id][lg] = x;
+                        }
                     }
+                    catch { }
                 }
-                catch { }
+            HashSet<string> vistos = new HashSet<string>(ordre);
+            List<Dictionary<string, object>> tots = new List<Dictionary<string, object>>();
+            foreach (string id in ordre)
+            {
+                Dictionary<string, Dictionary<string, object>> v = perId[id];
+                Dictionary<string, object> tria;
+                bool cat = v.Values.Any(G.EsCatalunya);
+                if (cat && v.ContainsKey("ca")) tria = v["ca"];
+                else if (v.ContainsKey(llG)) tria = v[llG];
+                else tria = v.Values.First();
+                tots.Add(tria);
             }
             // Si el que s'ha escrit s'assembla a un municipi oficial que el cercador no ha trobat
             // (p. ex. «seu d'urgell» sense l'article), es busca pel nom oficial complet
@@ -104,7 +124,7 @@ namespace TempsBarra
                     {
                         object r = G.Web("https://geocoding-api.open-meteo.com/v1/search?count=5&language=ca&format=json&name=" + Uri.EscapeDataString(cand.Value.Nom));
                         Dictionary<string, object> y = J.A(J.G(r, "results")).OfType<Dictionary<string, object>>()
-                            .FirstOrDefault(o => J.S(J.G(o, "admin1")) == "Catalunya");
+                            .FirstOrDefault(G.EsCatalunya);
                         if (y != null && vistos.Add(J.S(J.G(y, "id")) ?? "")) tots.Add(y);
                     }
                     catch { }
@@ -112,7 +132,7 @@ namespace TempsBarra
             }
             foreach (Dictionary<string, object> x in tots)
             {
-                if (J.S(J.G(x, "admin1")) != "Catalunya") continue;
+                if (!G.EsCatalunya(x)) continue;
                 string codi = null;
                 Municipi mun = G.MunicipiOficial(Nom(x));
                 if (mun != null)
@@ -132,7 +152,7 @@ namespace TempsBarra
             }
             string clauQ = G.Clau(q);
             Resultats = tots
-                .OrderBy(x => J.S(J.G(x, "admin1")) == "Catalunya" ? 0 : (J.S(J.G(x, "country_code")) == "ES" ? 1 : 2))
+                .OrderBy(x => (G.EsCatalunya(x) && G.LlenguaCatalana()) ? 0 : (J.S(J.G(x, "country_code")) == "ES" ? 1 : 2))
                 .ThenBy(x => G.Clau(Nom(x)) == clauQ ? 0 : 1)
                 .ThenBy(x => -(J.D(J.G(x, "population")) ?? 0))
                 .ToList();

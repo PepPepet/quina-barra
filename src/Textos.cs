@@ -99,6 +99,26 @@ namespace TempsBarra
             return null;
         }
 
+        // Codi de llengua per al cercador de llocs (Open-Meteo/GeoNames): les variants fan servir la llengua mare
+        public static string LlenguaCercador()
+        {
+            if (Llengua.StartsWith("ca", StringComparison.Ordinal)) return "ca";
+            if (Llengua.StartsWith("oc", StringComparison.Ordinal)) return "oc";
+            return Llengua;
+        }
+
+        // Català, valencià, alguerès i aranès: els llocs de Catalunya surten primer al cercador
+        public static bool LlenguaCatalana()
+        {
+            return Llengua.StartsWith("ca", StringComparison.Ordinal) || Llengua == "oc-aranes";
+        }
+
+        // Catalunya al cercador: admin1_id 3336901 de GeoNames (el nom canvia segons la llengua)
+        public static bool EsCatalunya(Dictionary<string, object> x)
+        {
+            return x != null && J.S(J.G(x, "admin1_id")) == "3336901";
+        }
+
         // Nom de la llengua en la mateixa llengua (per al selector)
         public static string NomLlengua(string codi)
         {
