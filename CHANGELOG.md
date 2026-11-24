@@ -9,6 +9,7 @@ Ara parla nou llengües.
 - **Llengües noves:** valencià, gallec, basc, asturià, aragonès, occità, aranès i alguerès, a més del català. Traduïdes amb l'ajuda de Claude i revisades amb la norma de cada llengua; no som lingüistes, així que els suggeriments són benvinguts.
 - El giny agafa la llengua del Windows si la té; si no, surt en català. Es pot canviar a la pàgina nova **Configuració** (roda dentada del menú ⋯), i es desa a la configuració.
 - Els llocs desats s'endrecen **arrossegant les pastilles**; la primera és la principal, la de la barra.
+- **Endreça el panell** (a sota de tot del panell): les targetes s'arrosseguen al panell mateix; a Configuració, les tres ratlles fan el mateix des de la llista.
 - **Configuració** substitueix «Personalitza el panell» al menú ⋯ i al peu del panell: hi ha la llengua i, a sota, els blocs del panell.
 - Els textos ja no són dins del codi: cada llengua és un fitxer a `src/textos/` (format jquery.i18n), amb una nota per a cada text que explica on surt.
 - `/prova <carpeta> <llengua>` fa les captures en la llengua que triïs i avisa si falta algun text.

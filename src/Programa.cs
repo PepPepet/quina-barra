@@ -275,6 +275,10 @@ namespace TempsBarra
                     G.AmagaSubpagina();
                 }
 
+                // Mode «Endreça»
+                try { G.ModeEndreca(true); Desa(G.det.W, "endreca"); G.ModeEndreca(false); }
+                catch (Exception ex) { informe.Add("ERROR al mode Endreça: " + ex); }
+
                 // L'altre tema, només a la memòria (no es desa)
                 string tema = G.ModeClar() ? "fosc" : "clar";
                 G.Conf.Tema = tema;

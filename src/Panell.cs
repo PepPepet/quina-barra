@@ -102,13 +102,14 @@ namespace TempsBarra
                 Border r = g.F<Border>("T" + nom);
                 r.Tag = nom;
                 g.Rajoles[nom] = r;
-                r.MouseLeftButtonUp += (s, e) => MostraSubpagina((string)((Border)s).Tag);
+                r.MouseLeftButtonUp += (s, e) => { if (!modeEndreca) MostraSubpagina((string)((Border)s).Tag); };
                 r.MouseEnter += (s, e) => ((Border)s).BorderBrush = Pinzell(det.P["SUB"]);
                 r.MouseLeave += (s, e) => ((Border)s).BorderBrush = Pinzell(det.P["BORDER"]);
             }
             g.BEnrere.Click += (s, e) => AmagaSubpagina();
             g.BQuantA.Click += (s, e) => ObreMenuOpcions();
             g.F<Button>("BPersonalitza").Click += (s, e) => MostraSubpagina("Personalitza");
+            g.F<Button>("BEndreca").Click += (s, e) => ModeEndreca(true);
 
             // Botó del mode actiu, ressaltat
             string tema = Conf.Tema;
@@ -125,6 +126,7 @@ namespace TempsBarra
             w.Deactivated += (s, e) =>
             {
                 if (dialeg || menuObert) return;
+                if (modeEndreca) ModeEndreca(false);
                 det.W.Hide(); tancatA = DateTime.Now; AturaRadar(); AmagaSubpagina();
             };
             w.KeyDown += (s, e) =>
@@ -169,6 +171,7 @@ namespace TempsBarra
             };
             Det anterior = det; det = g;
             ColocaBlocs();
+            PreparaEndreca();
             det = anterior ?? g;
             return g;
         }

@@ -131,6 +131,135 @@ namespace TempsBarra
                 else { pendents.Add(e); if (pendents.Count == 2) buida(); }
             }
             buida();
+            if (modeEndreca) cont.Children.Insert(0, AvisEndreca());
+        }
+
+        // ---------- Mode «Endreça»: arrossegar els blocs al panell mateix ----------
+        public static bool modeEndreca;
+        static readonly Dictionary<FrameworkElement, string> idBloc = new Dictionary<FrameworkElement, string>();
+        static FrameworkElement endArr; static Point endP0; static bool endMou;
+        static System.Windows.Threading.DispatcherTimer endTimer;
+
+        // Cada bloc del panell s'apunta als esdeveniments del ratolí (només fan res en mode «Endreça»)
+        static void PreparaEndreca()
+        {
+            idBloc.Clear();
+            foreach (InfoBloc b in TotsBlocs)
+            {
+                FrameworkElement e = ElementBloc(b.Id);
+                if (e == null) continue;
+                idBloc[e] = b.Id;
+                e.PreviewMouseLeftButtonDown += (s, ev) =>
+                {
+                    if (!modeEndreca) return;
+                    endArr = (FrameworkElement)s; endMou = false;
+                    endP0 = ev.GetPosition(det.F<StackPanel>("Blocs"));
+                    endArr.CaptureMouse(); ev.Handled = true;
+                };
+                e.PreviewMouseMove += (s, ev) => { if (endArr == s) EndMou(); };
+                e.PreviewMouseLeftButtonUp += (s, ev) => { if (endArr == s) { ev.Handled = true; EndAmunt(); } };
+                e.LostMouseCapture += (s, ev) => { if (endArr == s) { endArr = null; if (endMou) ColocaBlocs(); } };
+            }
+        }
+
+        public static void ModeEndreca(bool si)
+        {
+            modeEndreca = si;
+            AmagaSubpagina();
+            foreach (KeyValuePair<FrameworkElement, string> kv in idBloc)
+            {
+                kv.Key.Cursor = si ? Cursors.SizeAll : (det.Rajoles.ContainsKey(kv.Value) ? Cursors.Hand : null);
+                Border bd = kv.Key as Border;
+                if (bd != null) bd.BorderBrush = Pinzell(si ? det.P["ACCENT"] : det.P["BORDER"]);
+            }
+            ColocaBlocs();
+            if (si) det.Desplaca.ScrollToTop();
+        }
+
+        static FrameworkElement AvisEndreca()
+        {
+            Dictionary<string, string> p = det.P;
+            Border b = new Border(); b.Background = Pinzell(p["SEL"]); b.BorderBrush = Pinzell(p["ACCENT"]); b.BorderThickness = new Thickness(1);
+            b.CornerRadius = new CornerRadius(8); b.Margin = new Thickness(4); b.Padding = new Thickness(14, 10, 10, 10);
+            Grid gr = new Grid(); gr.ColumnDefinitions.Add(new ColumnDefinition()); gr.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            TextBlock t = Text(T("endreca-ajuda"), 13, p["FG"]); t.TextWrapping = TextWrapping.Wrap; t.VerticalAlignment = VerticalAlignment.Center; gr.Children.Add(t);
+            Button fet = new Button(); fet.Style = (Style)det.W.FindResource("Accent"); fet.Content = T("endreca-fet"); fet.Margin = new Thickness(10, 0, 0, 0);
+            fet.Click += (s, e) => ModeEndreca(false);
+            Grid.SetColumn(fet, 1); gr.Children.Add(fet);
+            b.Child = gr;
+            return b;
+        }
+
+        static void EndMou()
+        {
+            if (endArr == null || Mouse.LeftButton != MouseButtonState.Pressed) return;
+            StackPanel cont = det.F<StackPanel>("Blocs");
+            Point pt = Mouse.GetPosition(cont);
+            double dx = pt.X - endP0.X, dy = pt.Y - endP0.Y;
+            if (!endMou)
+            {
+                if (Math.Abs(dx) < 6 && Math.Abs(dy) < 6) return;
+                endMou = true;
+                endArr.Opacity = 0.8;
+                Panel.SetZIndex(endArr, 10);
+                UIElement pare = endArr.Parent as UIElement;
+                if (pare != null && pare != cont) Panel.SetZIndex(pare, 10);
+                if (endTimer == null)
+                {
+                    // A prop de dalt o de baix del panell, es desplaça sol
+                    endTimer = new System.Windows.Threading.DispatcherTimer();
+                    endTimer.Interval = TimeSpan.FromMilliseconds(30);
+                    endTimer.Tick += (s, e) =>
+                    {
+                        if (endArr == null || !endMou) { endTimer.Stop(); return; }
+                        ScrollViewer sv = det.Desplaca;
+                        double ys = Mouse.GetPosition(sv).Y;
+                        if (ys < 40) sv.ScrollToVerticalOffset(sv.VerticalOffset - 12);
+                        else if (ys > sv.ViewportHeight - 40) sv.ScrollToVerticalOffset(sv.VerticalOffset + 12);
+                        else return;
+                        EndMou();
+                    };
+                }
+                endTimer.Start();
+            }
+            endArr.RenderTransform = new TranslateTransform(dx, dy);
+        }
+
+        static void EndAmunt()
+        {
+            FrameworkElement f = endArr; bool mogut = endMou;
+            endArr = null;
+            if (endTimer != null) endTimer.Stop();
+            f.ReleaseMouseCapture();
+            if (!mogut) return;
+            StackPanel cont = det.F<StackPanel>("Blocs");
+            Point pt = Mouse.GetPosition(cont);
+            string idArr = idBloc[f];
+            // El bloc de sota el ratolí (o el més proper en vertical) i si va abans o després
+            string idObj = null; bool despres = false; double millor = double.MaxValue;
+            foreach (KeyValuePair<FrameworkElement, string> kv in idBloc)
+            {
+                FrameworkElement o = kv.Key;
+                if (o == f || !o.IsVisible || !BlocVisible(kv.Value)) continue;
+                Point a = o.TranslatePoint(new Point(0, 0), cont);
+                Rect r = new Rect(a, new Size(o.ActualWidth, o.ActualHeight));
+                double dist = r.Contains(pt) ? 0 : Math.Min(Math.Abs(pt.Y - r.Top), Math.Abs(pt.Y - r.Bottom)) + (pt.X >= r.Left && pt.X <= r.Right ? 0 : 1000);
+                if (dist < millor)
+                {
+                    millor = dist; idObj = kv.Value;
+                    bool ample = Info(kv.Value).Ample;
+                    despres = ample ? pt.Y > r.Top + r.Height / 2 : (pt.X > r.Left + r.Width / 2 || pt.Y > r.Bottom);
+                }
+            }
+            if (idObj == null) { ColocaBlocs(); return; }
+            List<EstatBloc> ordre = OrdreBlocs();
+            EstatBloc x = ordre.First(e => e.Id == idArr);
+            ordre.Remove(x);
+            int i = ordre.FindIndex(e => e.Id == idObj);
+            ordre.Insert(Math.Min(ordre.Count, i + (despres ? 1 : 0)), x);
+            DesaOrdreBlocs(ordre);
+            f.Opacity = 1; f.RenderTransform = null; Panel.SetZIndex(f, 0);
+            ColocaBlocs();
         }
 
         // ---------- Pàgina «Configuració»: llengua i «Personalitza el panell» ----------
