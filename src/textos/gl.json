@@ -8,6 +8,8 @@
 	"llengua-titol": "Lingua",
 	"llengua-windows": "A do Windows",
 	"llengua-nota": "Tradución feita coa axuda de Claude, a IA de Anthropic. Non somos lingüistas: se atopas erros, as suxestións son benvidas.",
+	"llengua-cerca": "Buscar unha lingua...",
+	"llengua-cap": "Non atopei ningunha lingua.",
 	"error-config": "Non puiden ler os teus lugares gardados ($1).\n\nNon toquei nada. Volve iniciar o trebello dentro dun momento.",
 	"boto-cancela": "Cancelar",
 	"boto-desa": "Gardar",

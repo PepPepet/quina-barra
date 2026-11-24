@@ -186,6 +186,16 @@ namespace TempsBarra
             Igual("Alguerés, Aragonés, Aranés, Asturianu, Català, English, Euskara, Galego, Occitan, Valencià",
                 string.Join(", ", G.LlenguesPerNom().Select(G.NomLlenguaMenu)), "menú de llengües");
             Igual("català", G.NomLlengua("ca"), "al fitxer, el nom es queda en minúscula");
+            // Una llengua sense «nom-llengua» (o sense fitxer) agafa el nom que en sap el Windows, sense la regió
+            Igual("Deutsch", G.NomLlengua("de"), "nom de reserva del Windows");
+            Igual("Deutsch", G.NomLlenguaMenu("de"), "nom de reserva al menú");
+            Igual("xx-prova", G.NomLlengua("xx-prova"), "codi desconegut: el codi");
+            // Cercador de llengües
+            Igual("catala", G.TextPerCercar(" Català "), "sense accents ni majúscules");
+            Igual(true, G.TextPerCercar(G.NomsPerCercar("de")).Contains("german"), "alemany es troba en anglès");
+            Igual(true, G.TextPerCercar(G.NomsPerCercar("eu")).Contains("euskara"), "basc pel nom propi");
+            if (System.Globalization.CultureInfo.CurrentUICulture.Name.StartsWith("ca"))   // només si el Windows de les proves és en català
+                Igual(true, G.TextPerCercar(G.NomsPerCercar("de")).Contains("alemany"), "alemany es troba en la llengua del Windows");
 
             // Un text que falta en valencià surt en català, i un que falta a totes, en anglès
             G.CarregaLlengua("ca-valencia");

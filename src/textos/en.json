@@ -8,6 +8,8 @@
 	"llengua-titol": "Language",
 	"llengua-windows": "Same as Windows",
 	"llengua-nota": "This translation was made with the help of Claude, Anthropic's AI. We're not linguists: if you spot any mistakes, suggestions are welcome.",
+	"llengua-cerca": "Search for a language...",
+	"llengua-cap": "No language found.",
 	"error-config": "I couldn't read your saved places ($1).\n\nI haven't changed anything. Start the widget again in a moment.",
 	"boto-cancela": "Cancel",
 	"boto-desa": "Save",

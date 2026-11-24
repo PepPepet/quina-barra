@@ -362,43 +362,96 @@ namespace TempsBarra
             sp.Children.Add(tb);
         }
 
-        // Secció «Llengua» de la pàgina Configuració
-        public static Func<ContextMenu> ObreMenuLlengues;   // el menú de llengües de Configuració (també per a /prova)
+        // ---------- Secció «Llengua» de la pàgina Configuració ----------
+        // Les llengües minoritzades, que són la raó de ser del giny, van al capdamunt de la llista; després, una ratlla i la resta.
+        static readonly HashSet<string> LlenguesDeCasa = new HashSet<string> { "an", "ast", "ca", "ca-alguer", "ca-valencia", "eu", "gl", "oc", "oc-aranes" };
+        const int LlenguesPerCercador = 12;   // amb més llengües que això, la llista porta un cercador
+
+        // Obre la llista de llengües i hi escriu un filtre (també per a /prova)
+        public static Action<string> ObreLlistaLlengues;
 
         static void SeccioLlengua()
         {
             Dictionary<string, string> p = det.P;
-            // Llengua
             StackPanel spL = Targeta();
             spL.Children.Add(Text(T("llengua-titol"), 15, p["FG"], "SemiBold"));
-            // Botó amb la llengua d'ara que obre un menú (amb els mateixos colors que la resta del giny)
-            List<string> codis = new List<string> { null };
-            codis.AddRange(LlenguesPerNom());   // en ordre alfabètic del nom de cada llengua
+            List<string> totes = LlenguesPerNom();   // en ordre alfabètic del nom de cada llengua
             Func<string, string> nomOpcio = c => c == null ? T("llengua-windows") : NomLlenguaMenu(c);
+
+            // Botó amb la llengua d'ara: obre i tanca la llista, que es desplega dins la mateixa targeta
             Button bL = new Button(); bL.Margin = new Thickness(0, 8, 0, 0); bL.HorizontalAlignment = HorizontalAlignment.Left; bL.MinWidth = 220;
             Grid contL = new Grid(); contL.ColumnDefinitions.Add(new ColumnDefinition()); contL.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             TextBlock txL = Text(nomOpcio(Conf.Llengua), 13.5, p["FG"]); txL.Margin = new Thickness(0, 0, 16, 0); contL.Children.Add(txL);
             TextBlock flL = Text(((char)0xE70D).ToString(), 11, p["SUB"]); flL.FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"); flL.VerticalAlignment = VerticalAlignment.Center;
             Grid.SetColumn(flL, 1); contL.Children.Add(flL);
             bL.Content = contL; bL.HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            ObreMenuLlengues = () =>
-            {
-                ContextMenu cm = new ContextMenu(); Direccio(cm);
-                cm.Style = (Style)det.W.FindResource(typeof(ContextMenu));
-                cm.MaxHeight = 440;   // amb moltes llengües, el menú es desplaça
-                foreach (string c in codis)
-                {
-                    string codi = c;
-                    cm.Items.Add(OpcioMenu(codi == Conf.Llengua ? "" : "", nomOpcio(codi), () => { if (codi != Conf.Llengua) CanviaLlengua(codi); }));
-                }
-                cm.Opened += (s2, e2) => menuObert = true;
-                cm.Closed += (s2, e2) => { menuObert = false; if (det.W.IsVisible) det.W.Activate(); };
-                cm.PlacementTarget = bL; cm.Placement = PlacementMode.Bottom;
-                cm.IsOpen = true;
-                return cm;
-            };
-            bL.Click += (s, e) => ObreMenuLlengues();
             spL.Children.Add(bL);
+
+            StackPanel desplegable = new StackPanel(); desplegable.Margin = new Thickness(0, 8, 0, 0); desplegable.Visibility = Visibility.Collapsed;
+            // Cercador (només si hi ha moltes llengües), amb el mateix aspecte que el del diàleg de llocs
+            Border caixa = new Border(); caixa.Background = Pinzell(p["CARD"]); caixa.BorderBrush = Pinzell(p["BORDER"]); caixa.BorderThickness = new Thickness(1);
+            caixa.CornerRadius = new CornerRadius(5); caixa.Height = 34; caixa.Margin = new Thickness(0, 0, 0, 6);
+            Grid gc = new Grid();
+            TextBlock pista = Text(T("llengua-cerca"), 13.5, p["SUB"]); pista.Opacity = 0.7; pista.Margin = new Thickness(10, 0, 10, 0); pista.VerticalAlignment = VerticalAlignment.Center; pista.IsHitTestVisible = false;
+            TextBox cerca = new TextBox(); cerca.Background = Brushes.Transparent; cerca.BorderThickness = new Thickness(0); cerca.Foreground = Pinzell(p["FG"]); cerca.CaretBrush = Pinzell(p["FG"]);
+            cerca.FontSize = 13.5; cerca.Padding = new Thickness(7, 0, 7, 0); cerca.VerticalContentAlignment = VerticalAlignment.Center;
+            gc.Children.Add(pista); gc.Children.Add(cerca); caixa.Child = gc;
+            caixa.Visibility = totes.Count > LlenguesPerCercador ? Visibility.Visible : Visibility.Collapsed;
+            desplegable.Children.Add(caixa);
+            ScrollViewer sv = new ScrollViewer(); sv.MaxHeight = 300; sv.VerticalScrollBarVisibility = ScrollBarVisibility.Auto; sv.HorizontalScrollBarVisibility = ScrollBarVisibility.Disabled;
+            StackPanel files = new StackPanel(); sv.Content = files;
+            desplegable.Children.Add(sv);
+            spL.Children.Add(desplegable);
+
+            Func<string, FrameworkElement> fila = codi =>
+            {
+                Button b = new Button(); b.Style = (Style)det.W.FindResource("Pla"); b.HorizontalContentAlignment = HorizontalAlignment.Stretch; b.Padding = new Thickness(6, 6, 6, 6);
+                Grid g = new Grid(); g.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(26) }); g.ColumnDefinitions.Add(new ColumnDefinition());
+                if (codi == Conf.Llengua) { TextBlock v = Text(((char)0xE73E).ToString(), 12, p["ACCENT"]); v.FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"); v.VerticalAlignment = VerticalAlignment.Center; g.Children.Add(v); }
+                TextBlock t = Text(nomOpcio(codi), 13.5, p["FG"]); Grid.SetColumn(t, 1); g.Children.Add(t);
+                b.Content = g;
+                b.MouseEnter += (s, e) => ((Button)s).Background = Pinzell(p["HOVER"]);
+                b.MouseLeave += (s, e) => ((Button)s).Background = Brushes.Transparent;
+                b.Click += (s, e) => { if (codi != Conf.Llengua) CanviaLlengua(codi); else desplegable.Visibility = Visibility.Collapsed; };
+                return b;
+            };
+            Action omple = () =>
+            {
+                files.Children.Clear();
+                string q = TextPerCercar(cerca.Text);
+                Func<string, bool> passa = c => q.Length == 0 || TextPerCercar(NomsPerCercar(c)).Contains(q);
+                if (q.Length == 0) files.Children.Add(fila(null));
+                List<string> casa = totes.Where(c => LlenguesDeCasa.Contains(c) && passa(c)).ToList();
+                List<string> resta = totes.Where(c => !LlenguesDeCasa.Contains(c) && passa(c)).ToList();
+                foreach (string c in casa) files.Children.Add(fila(c));
+                if (casa.Count > 0 && resta.Count > 0)
+                {
+                    Rectangle r = new Rectangle(); r.Height = 1; r.Fill = Pinzell(p["BORDER"]); r.Margin = new Thickness(6, 6, 6, 6);
+                    files.Children.Add(r);
+                }
+                foreach (string c in resta) files.Children.Add(fila(c));
+                if (casa.Count + resta.Count == 0 && q.Length > 0)
+                {
+                    TextBlock cap = Text(T("llengua-cap"), 13, p["SUB"]); cap.Margin = new Thickness(8, 6, 8, 6); files.Children.Add(cap);
+                }
+            };
+            cerca.TextChanged += (s, e) => { pista.Visibility = cerca.Text.Length > 0 ? Visibility.Collapsed : Visibility.Visible; omple(); sv.ScrollToTop(); };
+            cerca.GotFocus += (s, e) => caixa.BorderBrush = Pinzell(p["ACCENT"]);
+            cerca.LostFocus += (s, e) => caixa.BorderBrush = Pinzell(p["BORDER"]);
+            ObreLlistaLlengues = filtre =>
+            {
+                desplegable.Visibility = Visibility.Visible;
+                flL.Text = ((char)0xE70E).ToString();
+                cerca.Text = filtre ?? "";
+                omple();
+                if (caixa.Visibility == Visibility.Visible) cerca.Focus();
+            };
+            bL.Click += (s, e) =>
+            {
+                if (desplegable.Visibility == Visibility.Visible) { desplegable.Visibility = Visibility.Collapsed; flL.Text = ((char)0xE70D).ToString(); }
+                else ObreLlistaLlengues("");
+            };
+
             // Nota de les traduccions fetes amb Claude: no surt en català (l'original d'en Pep) ni en anglès,
             // ni si la llengua no la té traduïda (llavors no se sap qui ha fet la traducció)
             if (Llengua != "ca" && Llengua != LlenguaBase && TeTextPropi("llengua-nota"))

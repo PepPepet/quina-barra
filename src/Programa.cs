@@ -277,23 +277,15 @@ namespace TempsBarra
                     G.AmagaSubpagina();
                 }
 
-                // Menú de llengües obert, a Configuració
+                // Llista de llengües oberta, a Configuració (i, si hi ha cercador, filtrada amb «ale»)
                 try
                 {
                     G.MostraSubpagina("Personalitza");
-                    System.Windows.Controls.ContextMenu cmL = G.ObreMenuLlengues();
-                    Bomba(300); cmL.UpdateLayout();
-                    PresentationSource srcL = PresentationSource.FromVisual(G.det.W);
-                    double eL = srcL != null ? srcL.CompositionTarget.TransformToDevice.M11 : 1;
-                    RenderTargetBitmap rL = new RenderTargetBitmap((int)Math.Ceiling(cmL.ActualWidth * eL), (int)Math.Ceiling(cmL.ActualHeight * eL), 96 * eL, 96 * eL, PixelFormats.Pbgra32);
-                    rL.Render(cmL);
-                    PngBitmapEncoder encL = new PngBitmapEncoder(); encL.Frames.Add(BitmapFrame.Create(rL));
-                    using (FileStream fsL = File.Create(Path.Combine(carpeta, "menu-llengues.png"))) encL.Save(fsL);
-                    cmL.IsOpen = false;
+                    G.ObreLlistaLlengues(""); Desa(G.det.W, "llengues");
+                    G.ObreLlistaLlengues("ale"); Desa(G.det.W, "llengues-cerca");
                     G.AmagaSubpagina();
-                    informe.Add("PNG menu-llengues.png");
                 }
-                catch (Exception ex) { informe.Add("Error menú de llengües: " + ex.Message); }
+                catch (Exception ex) { informe.Add("ERROR a la llista de llengües: " + ex); }
 
                 // Mode «Endreça»
                 try { G.ModeEndreca(true); Desa(G.det.W, "endreca"); G.ModeEndreca(false); }

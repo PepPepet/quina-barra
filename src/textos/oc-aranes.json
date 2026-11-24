@@ -8,6 +8,8 @@
 	"llengua-titol": "Lengua",
 	"llengua-windows": "Era deth Windows",
 	"llengua-nota": "Traduccion hèta damb era ajuda de Claude, era IA d'Anthropic. Non èm lingüistes: s'i trapes errors, es suggeriments son planvenguts.",
+	"llengua-cerca": "Cèrca ua lengua...",
+	"llengua-cap": "Non è trapat cap de lengua.",
 	"error-config": "Non è pogut liéger es tòns lòcs sauvadi ($1).\n\nNon è tocat arren. Torna a alugar eth widget d'aciu a un moment.",
 	"boto-cancela": "Anulla",
 	"boto-desa": "Sauva",

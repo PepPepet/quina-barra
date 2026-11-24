@@ -8,6 +8,8 @@
 	"llengua-titol": "Llengua",
 	"llengua-windows": "La del Windows",
 	"llengua-nota": "Traducció feta amb l'ajuda de Claude, la IA d'Anthropic. No som lingüistes: si hi trobes errors, els suggeriments són benvinguts.",
+	"llengua-cerca": "Cerca una llengua...",
+	"llengua-cap": "No he trobat cap llengua.",
 	"error-config": "No he pogut llegir els teus llocs desats ($1).\n\nNo he tocat res. Torna a engegar el giny d'aquí a un moment.",
 	"boto-cancela": "Cancel·la",
 	"boto-desa": "Desa",

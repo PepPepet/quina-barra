@@ -245,12 +245,63 @@ namespace TempsBarra
             return x != null && J.S(J.G(x, "admin1_id")) == "3336901";
         }
 
-        // Nom de la llengua en la mateixa llengua (per al selector)
+        // Nom de la llengua en la mateixa llengua (per al selector). Si el fitxer no el porta, el que en sap el Windows
+        // (sense la regió: «Deutsch (Deutschland)» → «Deutsch»); si tampoc, el codi.
         public static string NomLlengua(string codi)
         {
             string n;
             if (LlegeixTextos(codi).TryGetValue("nom-llengua", out n) && !string.IsNullOrEmpty(n)) return n;
+            CultureInfo ci = CulturaDe(codi);
+            if (ci != null && !string.IsNullOrEmpty(ci.NativeName))
+            {
+                string nn = ci.NativeName; int k = nn.IndexOf(" (", StringComparison.Ordinal);
+                return k > 0 ? nn.Substring(0, k) : nn;
+            }
             return codi;
+        }
+
+        // Cultura del .NET per a un codi de MediaWiki (null si el Windows no la coneix)
+        static readonly Dictionary<string, string> CodisNet = new Dictionary<string, string> {
+            { "ca-valencia", "ca-ES-valencia" }, { "ca-alguer", "ca-IT" }, { "oc-aranes", "oc-FR" }, { "sr-ec", "sr-Cyrl" }, { "sr-el", "sr-Latn" },
+            { "ckb", "ku-Arab" }, { "nb", "nb-NO" }, { "tl", "fil" }, { "kk-cyrl", "kk" }, { "tg-cyrl", "tg-Cyrl" }, { "ug-arab", "ug" }, { "pnb", "pa-Arab" } };
+        public static CultureInfo CulturaDe(string codi)
+        {
+            if (string.IsNullOrEmpty(codi)) return null;
+            string net;
+            foreach (string c in new[] { CodisNet.TryGetValue(codi, out net) ? net : null, codi })
+            {
+                if (c == null) continue;
+                try { CultureInfo ci = CultureInfo.GetCultureInfo(c); if (ci.ThreeLetterISOLanguageName != "zzz") return ci; } catch { }
+            }
+            return null;
+        }
+
+        // Tot el que pot escriure algú per trobar una llengua: el nom propi, el codi, el nom en la llengua de la interfície
+        // del Windows («alemany») i en anglès. El DisplayName del .NET no serveix: surt en la llengua d'instal·lació del sistema.
+        public static string NomsPerCercar(string codi)
+        {
+            string r = NomLlengua(codi) + " " + codi;
+            CultureInfo ci = CulturaDe(codi);
+            if (ci != null) r += " " + NomEnLaLlenguaDelWindows(ci.Name) + " " + ci.EnglishName;
+            return r;
+        }
+
+        [System.Runtime.InteropServices.DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        static extern int GetLocaleInfoEx(string nom, uint tipus, StringBuilder dades, int mida);
+        static string NomEnLaLlenguaDelWindows(string cultura)
+        {
+            try { StringBuilder b = new StringBuilder(200); return GetLocaleInfoEx(cultura, 0x6f /* LOCALE_SLOCALIZEDLANGUAGENAME */, b, 200) > 0 ? b.ToString() : ""; }
+            catch { return ""; }
+        }
+
+        // Minúscules i sense accents, per comparar («Català» → «catala»)
+        public static string TextPerCercar(string s)
+        {
+            if (string.IsNullOrEmpty(s)) return "";
+            StringBuilder b = new StringBuilder();
+            foreach (char ch in s.Trim().Normalize(NormalizationForm.FormD))
+                if (CharUnicodeInfo.GetUnicodeCategory(ch) != UnicodeCategory.NonSpacingMark) b.Append(char.ToLowerInvariant(ch));
+            return b.ToString();
         }
 
         // Nom de la llengua per al menú: amb la inicial en majúscula, com qualsevol opció de menú i com fa el Windows

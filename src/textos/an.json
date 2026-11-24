@@ -8,6 +8,8 @@
 	"llengua-titol": "Luenga",
 	"llengua-windows": "A de Windows",
 	"llengua-nota": "Traducción feita con l'aduya de Claude, a IA d'Anthropic. No somos lingüistas: si i trobas errors, as sucherencias son bienvenidas.",
+	"llengua-cerca": "Buscar una luenga...",
+	"llengua-cap": "No he trobau garra luenga.",
 	"error-config": "No he podiu leyer os tuyos puestos alzaus ($1).\n\nNo he tocau cosa. Torna a enchegar o widget d'aquí a un momento.",
 	"boto-cancela": "Cancelar",
 	"boto-desa": "Alzar",

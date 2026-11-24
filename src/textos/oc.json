@@ -8,6 +8,8 @@
 	"llengua-titol": "Lenga",
 	"llengua-windows": "La de Windows",
 	"llengua-nota": "Traduccion facha amb l'ajuda de Claude, l'IA d'Anthropic. Sèm pas lingüistas: se i trapas d'errors, las suggestions son benvengudas.",
+	"llengua-cerca": "Recercar una lenga...",
+	"llengua-cap": "Ai pas trobat cap de lenga.",
 	"error-config": "Ai pas pogut legir tos luòcs enregistrats ($1).\n\nAi pas res tocat. Torna aviar lo widget d'aquí a un momenton.",
 	"boto-cancela": "Anullar",
 	"boto-desa": "Enregistrar",

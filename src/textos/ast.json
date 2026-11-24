@@ -8,6 +8,8 @@
 	"llengua-titol": "Llingua",
 	"llengua-windows": "La de Windows",
 	"llengua-nota": "Traducción fecha cola ayuda de Claude, la IA d'Anthropic. Nun somos llingüistes: si atopes errores, les suxerencies son bienveníes.",
+	"llengua-cerca": "Buscar una llingua...",
+	"llengua-cap": "Nun atopé nenguna llingua.",
 	"error-config": "Nun pudi lleer los tos llugares guardaos ($1).\n\nNun toqué nada. Vuelvi a aniciar el trebeyu d'equí a un momentu.",
 	"boto-cancela": "Encaboxar",
 	"boto-desa": "Guardar",

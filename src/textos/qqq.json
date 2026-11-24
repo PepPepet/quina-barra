@@ -8,6 +8,8 @@
 	"llengua-titol": "Settings page: heading of the section where the user chooses the language of the program.",
 	"llengua-windows": "Settings page: first option of the language selector: use the same language as Windows (if the program has it; otherwise English).",
 	"llengua-nota": "Settings page: note shown under the language selector. It is not shown in English or in Catalan (the language the program was first written in), nor in a language that has not translated this message. The first translations (Catalan varieties, Galician, Basque, Asturian, Aragonese and Occitan) were made with the help of Claude, Anthropic's AI. If your translation was made or reviewed by people (for example here on translatewiki.net), you may say so instead, or invite users to help improve it.",
+	"llengua-cerca": "Settings page: placeholder text of the search box above the list of languages. The box only appears when the program has many languages; it finds a language by its own name, its code, and its name in the language of Windows or in English.",
+	"llengua-cap": "Settings page: shown in the list of languages when nothing matches the text typed in the search box.",
 	"error-config": "Error message box when the configuration file exists but cannot be read at startup. Nothing has been changed; the user should start the widget again in a moment.\n\nParameters:\n* $1 - full path of the configuration file",
 	"boto-cancela": "Button label: close a dialog without saving.",
 	"boto-desa": "Button label: save the changes and close the dialog.",

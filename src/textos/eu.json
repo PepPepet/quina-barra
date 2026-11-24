@@ -8,6 +8,8 @@
 	"llengua-titol": "Hizkuntza",
 	"llengua-windows": "Windowsena",
 	"llengua-nota": "Itzulpena Clauderen laguntzarekin egin da (Anthropic-en adimen artifiziala). Ez gara hizkuntzalariak: akatsik aurkitzen baduzu, ongi etorriak dira iradokizunak.",
+	"llengua-cerca": "Bilatu hizkuntza bat...",
+	"llengua-cap": "Ez dut hizkuntzarik aurkitu.",
 	"error-config": "Ezin izan ditut irakurri gordeta dituzun lekuak ($1).\n\nEz dut ezer ukitu. Abiarazi berriro widgeta pixka bat barru.",
 	"boto-cancela": "Utzi",
 	"boto-desa": "Gorde",
