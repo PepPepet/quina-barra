@@ -27,7 +27,7 @@ Giny per a Windows 11 que posa **el temps del teu poble** a l'esquerra de la bar
 - **Radar de pluja** de les últimes 2 hores, animat, sobre un mapa d'OpenStreetMap.
 - **Configuració** (roda dentada del menú ⋯): la llengua i **Personalitza el panell**, per triar quins blocs vols veure i en quin ordre. El que amaguis ja no es baixa d'internet.
 - Als municipis de Catalunya, enllaç directe a la previsió de **Meteocat**.
-- **En nou llengües**: català, valencià, gallec, basc, asturià, aragonès, occità, aranès i alguerès. Agafa la del Windows si la té, i la pots canviar a **Configuració**.
+- **En deu llengües**: català, valencià, gallec, basc, asturià, aragonès, occità, aranès, alguerès i anglès. Agafa la del Windows si la té (si no, surt en anglès), i la pots canviar a **Configuració**. Preparat per a llengües de dreta a esquerra, com l'àrab o l'hebreu.
 - Mode clar, fosc o com el Windows. S'amaga quan mires un vídeo a pantalla completa.
 - Lleuger: uns 100 MB de memòria i pràcticament gens de processador.
 
@@ -57,7 +57,8 @@ Un cop al dia mira si hi ha una versió nova. No la baixa ni la instal·la pel s
 
 | Llengua | Fitxer |
 |---|---|
-| Català (original) | `src/textos/ca.json` |
+| Català (la llengua en què s'ha fet) | `src/textos/ca.json` |
+| Anglès (la base de les traduccions) | `src/textos/en.json` |
 | Valencià | `src/textos/ca-valencia.json` |
 | Gallec | `src/textos/gl.json` |
 | Basc | `src/textos/eu.json` |
@@ -72,7 +73,14 @@ Un cop al dia mira si hi ha una versió nova. No la baixa ni la instal·la pel s
   <img src="docs/captures/panell-eu.png" width="380" alt="Panell en basc">
 </p>
 
-Som de Catalunya i el giny l'hem fet en català. Les altres llengües les hem traduït amb l'ajuda de Claude, la IA d'Anthropic, i les hem revisat amb cura, però no som lingüistes: si hi trobes errors, els suggeriments són benvinguts. El giny tria la llengua del Windows si la té (el Windows té català, valencià, gallec i basc) i, si no, la pots triar a mà a **Configuració**. Cada llengua és un fitxer de text al format de jquery.i18n; `src/textos/qqq.json` explica on surt cada text.
+Som de Catalunya i el giny l'hem fet en català. Les altres llengües les hem traduït amb l'ajuda de Claude, la IA d'Anthropic, i les hem revisat amb cura, però no som lingüistes: si hi trobes errors, els suggeriments són benvinguts. El giny tria la llengua del Windows si la té (el Windows té català, valencià, gallec i basc) i, si no, surt en anglès; la pots triar a mà a **Configuració**.
+
+Per a qui vulgui traduir-lo:
+
+- Cada llengua és un fitxer de text al format de jquery.i18n (el de translatewiki.net), amb els codis de llengua de MediaWiki. **L'original per traduir és l'anglès** (`en.json`), i `src/textos/qqq.json` explica on surt cada text i què és cada `$1`.
+- Llengua nova = afegir-hi el fitxer i compilar: surt sola al selector. Si hi falta algun text, surt el de la llengua mare (valencià i alguerès → català; aranès → occità) o, al final, l'anglès.
+- `{{PLURAL:$1|...}}` accepta totes les formes de plural de la llengua, en l'ordre de MediaWiki (regles de CLDR a `src/plurals/`), i les formes explícites com `0=...`.
+- Les llengües de dreta a esquerra funcionen: les finestres es giren i els gràfics, la brúixola, el mapa i les icones es queden com han d'estar.
 
 ## On desa les coses i com es desinstal·la
 
@@ -110,7 +118,13 @@ El codi font és a `src\` (C#, .NET Framework 4.8, que ja porta el Windows). No 
 powershell -NoProfile -ExecutionPolicy Bypass -File src\build.ps1
 ```
 
-L'`.exe` surt a `exe\QuinaBarra.exe`. Amb `QuinaBarra.exe /prova <carpeta> [llengua]` en fa captures de totes les pantalles sense tocar la configuració (per exemple, `/prova C:\captures gl` les fa en gallec) i avisa si falta algun text.
+L'`.exe` surt a `exe\QuinaBarra.exe`. Amb `QuinaBarra.exe /prova <carpeta> [llengua]` en fa captures de totes les pantalles sense tocar la configuració (per exemple, `/prova C:\captures gl` les fa en gallec) i avisa si falta algun text o si n'hi ha que surten en anglès perquè no estan traduïts.
+
+Les proves dels plurals, de les llengües de reserva i dels codis de llengua:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File src\proves\prova-plurals.ps1
+```
 
 Els suggeriments i els errors, a les [incidències](https://github.com/PepPepet/quina-barra/issues), en català.
 
@@ -119,3 +133,11 @@ Els suggeriments i els errors, a les [incidències](https://github.com/PepPepet/
 Fet per [Pep Payo](https://peppayo.com) amb l'ajuda de Claude, la IA d'Anthropic.
 
 Codi obert amb **llicència MIT** (vegeu el fitxer [LICENSE](LICENSE)): el pots fer servir, copiar, modificar i compartir lliurement, sempre que hi mantinguis l'avís d'autoria. Es dona tal qual, sense cap garantia.
+
+Les regles de plural de `src/plurals/` són les dades de [CLDR](https://cldr.unicode.org/) (© Unicode, Inc., llicència Unicode-3.0) en la versió que porta [MediaWiki](https://www.mediawiki.org/), amb les seves excepcions.
+
+## In English
+
+**Quina Barra!** puts your town's weather on the left of the Windows 11 taskbar, where Windows' own weather widget used to be, with no news and no ads. It was made in Catalan, and it also speaks English and eight other languages; if your Windows language isn't one of them, it shows up in English. [Download the latest version](https://github.com/PepPepet/quina-barra/releases/latest): a single `QuinaBarra.exe`, no installer. You choose your places (it never guesses your location from your IP), and the temperature is the average of three weather models.
+
+Translations are plain jquery.i18n files in `src/textos/`: `en.json` is the source and `qqq.json` documents every message. Plurals follow the CLDR rules used by MediaWiki, and right-to-left languages are supported.

@@ -2,6 +2,19 @@
 
 Totes les versions de **Quina Barra!**, de la més nova a la més antiga.
 
+## [1.2] · sense publicar
+
+Ara també parla anglès i està preparat perquè la comunitat de [translatewiki.net](https://translatewiki.net/) el pugui traduir a qualsevol llengua.
+
+- **Anglès:** el giny surt en anglès si el Windows és en una llengua que no tenim (abans sortia en català). L'anglès (`en.json`) passa a ser la base de les traduccions; el català continua sent la llengua en què s'ha fet el giny i no canvia gens.
+- **Llengües de reserva:** si a una llengua li falta un text, surt el de la llengua mare (valencià i alguerès → català; aranès → occità) i, al final, en anglès.
+- **Codis de llengua de MediaWiki** (els de translatewiki): el giny reconeix la llengua del Windows amb aquests codis (`ca-valencia`, `pt-br`, `zh-hans`, `zh-hant`, `sr-ec`, `ckb`...). El selector de Configuració mostra totes les llengües que porti l'exe i, si són moltes, el menú es desplaça.
+- **Plurals de totes les llengües:** `{{PLURAL}}` fa servir les regles de CLDR, les mateixes que MediaWiki (incloses les seves excepcions): àrab (sis formes), rus, polonès, txec, irlandès, gal·lès, bretó... Les comprova `src/proves/prova-plurals.ps1` amb els més de 13.000 exemples oficials.
+- **Llengües de dreta a esquerra** (àrab, hebreu, persa, urdú...): les finestres es giren, i la brúixola, la corba del sol, els gràfics per hores, les barres de temperatura, els indicadors, el mapa del radar i les icones es mantenen d'esquerra a dreta. Els números amb unitat (15 °C, 75%) no es desordenen.
+- Els números es formaten segons la llengua (en anglès, 0.4 m i 1,014 hPa).
+- `build.ps1 -Sortida <carpeta>` compila en una altra carpeta, per provar sense tancar el giny.
+- En català el giny es veu igual que la 1.1 (comprovat captura a captura).
+
 ## [1.1] · 24/11/2026
 
 Ara parla nou llengües.
