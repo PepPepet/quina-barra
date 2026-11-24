@@ -602,7 +602,7 @@ namespace TempsBarra
             MostraDetall();
         }
 
-        // Canvia la llengua: es desa, es tornen a fer els textos i el panell, i es torna al «Quant a»
+        // Canvia la llengua: es desa, es tornen a fer els textos i el panell, i es torna a «Configuració»
         static void CanviaLlengua(string codi)
         {
             Conf.Llengua = codi;
@@ -619,7 +619,7 @@ namespace TempsBarra
             ActualitzaTemps(false);
             tancatA = null;
             MostraDetall();
-            MostraSubpagina("QuantA");
+            MostraSubpagina("Personalitza");
         }
 
         public static void MostraDetall()

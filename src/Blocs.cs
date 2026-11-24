@@ -131,7 +131,7 @@ namespace TempsBarra
             buida();
         }
 
-        // ---------- Pàgina «Personalitza el panell» ----------
+        // ---------- Pàgina «Configuració»: llengua i «Personalitza el panell» ----------
         static void CanviaBloc(Action<List<EstatBloc>> canvi, bool calenDades)
         {
             List<EstatBloc> ordre = OrdreBlocs();
@@ -148,7 +148,10 @@ namespace TempsBarra
         static void PaginaPersonalitza()
         {
             Dictionary<string, string> p = det.P;
-            det.SubTitol.Text = T("personalitza-titol");
+            det.SubTitol.Text = T("configuracio-titol");
+            SeccioLlengua();
+            TextBlock tp = Text(T("personalitza-titol"), 15, p["FG"], "SemiBold"); tp.Margin = new Thickness(6, 18, 6, 0);
+            det.SubCos.Children.Add(tp);
             Paragraf("", T("personalitza-explicacio"));
             StackPanel sp = Targeta();
             List<EstatBloc> ordre = OrdreBlocs();
@@ -220,7 +223,7 @@ namespace TempsBarra
         {
             ContextMenu cm = new ContextMenu();
             cm.Style = (Style)det.W.FindResource(typeof(ContextMenu));
-            cm.Items.Add(OpcioMenu("\uE70F", T("personalitza-titol"), () => MostraSubpagina("Personalitza")));
+            cm.Items.Add(OpcioMenu("\uE713", T("configuracio-titol"), () => MostraSubpagina("Personalitza")));
             cm.Items.Add(OpcioMenu("\uE946", VersioNova != null ? T("menu-quant-a-versio-nova") : T("menu-quant-a"), () => MostraSubpagina("QuantA")));
             cm.Items.Add(OpcioMenu("\uE8BB", T("menu-tanca"), () => app.Shutdown()));
             cm.Opened += (s, e) => menuObert = true;

@@ -1,4 +1,4 @@
-﻿# Quina Barra!
+# Quina Barra!
 
 *El temps del teu poble a la barra de tasques, en català.*
 
@@ -25,16 +25,16 @@ Giny per a Windows 11 que posa **el temps del teu poble** a l'esquerra de la bar
 - **Rajoles** de precipitació, vent, sortida i posta del sol, índex UV, qualitat de l'aire (escala oficial ICA), visibilitat, humitat i pressió. Cada rajola obre una **pàgina de detall** amb gràfic per hores i explicació.
 - **Mar**, als llocs de costa: onades, període, mar de fons, temperatura de l'aigua i l'estat de les platges (bandera, meduses, transparència).
 - **Radar de pluja** de les últimes 2 hores, animat, sobre un mapa d'OpenStreetMap.
-- **Personalitza el panell**: tria quins blocs vols veure i en quin ordre. El que amaguis ja no es baixa d'internet.
+- **Configuració** (roda dentada del menú ⋯): la llengua i **Personalitza el panell**, per triar quins blocs vols veure i en quin ordre. El que amaguis ja no es baixa d'internet.
 - Als municipis de Catalunya, enllaç directe a la previsió de **Meteocat**.
-- **En nou llengües**: català, valencià, gallec, basc, asturià, aragonès, occità, aranès i alguerès. Agafa la del Windows si la té, i la pots canviar al **Quant a**.
+- **En nou llengües**: català, valencià, gallec, basc, asturià, aragonès, occità, aranès i alguerès. Agafa la del Windows si la té, i la pots canviar a **Configuració**.
 - Mode clar, fosc o com el Windows. S'amaga quan mires un vídeo a pantalla completa.
 - Lleuger: uns 100 MB de memòria i pràcticament gens de processador.
 
 <p>
   <img src="docs/captures/detall-vent.png" width="250" alt="Detall del vent">
   <img src="docs/captures/detall-sol.png" width="250" alt="Sortida i posta del sol">
-  <img src="docs/captures/personalitza.png" width="250" alt="Personalitza el panell">
+  <img src="docs/captures/personalitza.png" width="250" alt="Configuració: llengua i blocs del panell">
 </p>
 
 ## Com s'instal·la
@@ -50,7 +50,7 @@ Un cop al dia mira si hi ha una versió nova. No la baixa ni la instal·la pel s
 
 - **Clic** al giny: obre el panell. **Clic** a una rajola: n'obre el detall. Per tornar: la fletxa ←, la tecla Esc o el botó lateral «enrere» del ratolí.
 - **Pastilles de llocs**: un clic hi salta; **+ Afegeix** en desa un de nou; amb el **botó dret** el pots fer principal, canviar-li el nom, moure'l o treure'l. El principal (★) és el que surt a la barra.
-- **Menú ⋯**: Personalitza el panell, Quant a i Tanca el giny.
+- **Menú ⋯**: Configuració (llengua i blocs del panell), Quant a i Tanca el giny.
 
 ## Llengües
 
@@ -71,7 +71,7 @@ Un cop al dia mira si hi ha una versió nova. No la baixa ni la instal·la pel s
   <img src="docs/captures/panell-eu.png" width="380" alt="Panell en basc">
 </p>
 
-Som de Catalunya i el giny l'hem fet en català. Les altres llengües les hem traduït amb l'ajuda de Claude, la IA d'Anthropic, i les hem revisat amb cura, però no som lingüistes: si hi trobes errors, els suggeriments són benvinguts. El giny tria la llengua del Windows si la té (el Windows té català, valencià, gallec i basc) i, si no, la pots triar a mà al **Quant a**. Cada llengua és un fitxer de text al format de jquery.i18n; `src/textos/qqq.json` explica on surt cada text.
+Som de Catalunya i el giny l'hem fet en català. Les altres llengües les hem traduït amb l'ajuda de Claude, la IA d'Anthropic, i les hem revisat amb cura, però no som lingüistes: si hi trobes errors, els suggeriments són benvinguts. El giny tria la llengua del Windows si la té (el Windows té català, valencià, gallec i basc) i, si no, la pots triar a mà a **Configuració**. Cada llengua és un fitxer de text al format de jquery.i18n; `src/textos/qqq.json` explica on surt cada text.
 
 ## On desa les coses i com es desinstal·la
 

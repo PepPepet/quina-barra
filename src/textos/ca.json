@@ -44,6 +44,7 @@
 	"bloc-mar-personalitza": "Mar (només als llocs de costa)",
 	"bloc-radar": "Radar de pluja",
 	"personalitza-titol": "Personalitza el panell",
+	"configuracio-titol": "Configuració",
 	"personalitza-explicacio": "Tria quins blocs vols veure i en quin ordre. Les rajoles petites van de dues en dues; si en queda una de sola, ocupa tota l'amplada. El que amaguis ja no es baixa d'internet, i el giny va més lleuger.",
 	"personalitza-amaga": "Amaga'l",
 	"personalitza-mostra": "Mostra'l",

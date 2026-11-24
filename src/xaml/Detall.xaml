@@ -152,7 +152,7 @@
           </Border>
 
           </StackPanel>
-          <Button x:Name="BPersonalitza" Style="{StaticResource Pla}" HorizontalAlignment="Center" Margin="0,8,0,6" FontSize="12.5" Content="@T:personalitza-titol@"/>
+          <Button x:Name="BPersonalitza" Style="{StaticResource Pla}" HorizontalAlignment="Center" Margin="0,8,0,6" FontSize="12.5" Content="@T:configuracio-titol@"/>
         </StackPanel>
       </ScrollViewer>
       <Grid x:Name="Sub" Visibility="Collapsed">

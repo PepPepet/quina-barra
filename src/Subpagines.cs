@@ -362,22 +362,10 @@ namespace TempsBarra
             sp.Children.Add(tb);
         }
 
-        static void QuantA()
+        // Secció «Llengua» de la pàgina Configuració
+        static void SeccioLlengua()
         {
             Dictionary<string, string> p = det.P;
-            det.SubTitol.Text = T("menu-quant-a");
-            StackPanel sp = Targeta();
-            StackPanel cap = new StackPanel(); cap.Orientation = Orientation.Horizontal;
-            Viewbox ic = IconaCaixa("mig", true, 44); ic.Margin = new Thickness(0, 0, 12, 0); cap.Children.Add(ic);
-            StackPanel tt = new StackPanel(); tt.VerticalAlignment = VerticalAlignment.Center;
-            tt.Children.Add(Text("Quina Barra!", 22, p["FG"], "SemiBold"));
-            tt.Children.Add(Text(T("quanta-versio", Versio), 12.5, p["SUB"]));
-            cap.Children.Add(tt); sp.Children.Add(cap);
-            TextBlock ds = Text(T("quanta-descripcio"), 13.5, p["FG"]); ds.TextWrapping = TextWrapping.Wrap; ds.Margin = new Thickness(0, 12, 0, 0);
-            sp.Children.Add(ds);
-            LiniaT(sp, "quanta-autor", "Pep Payo", UrlAutor);
-            LiniaT(sp, "quanta-codi", "github.com/PepPepet/quina-barra", UrlRepo);
-
             // Llengua
             StackPanel spL = Targeta();
             spL.Children.Add(Text(T("llengua-titol"), 15, p["FG"], "SemiBold"));
@@ -411,6 +399,23 @@ namespace TempsBarra
                 TextBlock nt = Text(T("llengua-nota"), 12.5, p["SUB"]); nt.TextWrapping = TextWrapping.Wrap; nt.Margin = new Thickness(0, 10, 0, 0);
                 spL.Children.Add(nt);
             }
+        }
+
+        static void QuantA()
+        {
+            Dictionary<string, string> p = det.P;
+            det.SubTitol.Text = T("menu-quant-a");
+            StackPanel sp = Targeta();
+            StackPanel cap = new StackPanel(); cap.Orientation = Orientation.Horizontal;
+            Viewbox ic = IconaCaixa("mig", true, 44); ic.Margin = new Thickness(0, 0, 12, 0); cap.Children.Add(ic);
+            StackPanel tt = new StackPanel(); tt.VerticalAlignment = VerticalAlignment.Center;
+            tt.Children.Add(Text("Quina Barra!", 22, p["FG"], "SemiBold"));
+            tt.Children.Add(Text(T("quanta-versio", Versio), 12.5, p["SUB"]));
+            cap.Children.Add(tt); sp.Children.Add(cap);
+            TextBlock ds = Text(T("quanta-descripcio"), 13.5, p["FG"]); ds.TextWrapping = TextWrapping.Wrap; ds.Margin = new Thickness(0, 12, 0, 0);
+            sp.Children.Add(ds);
+            LiniaT(sp, "quanta-autor", "Pep Payo", UrlAutor);
+            LiniaT(sp, "quanta-codi", "github.com/PepPepet/quina-barra", UrlRepo);
 
             // Actualitzacions i arrencada
             StackPanel spA = Targeta();
