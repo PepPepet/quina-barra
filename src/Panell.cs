@@ -502,7 +502,11 @@ namespace TempsBarra
                 TextBlock tn = Text(Nom(l), 13, p["FG"], "SemiBold"); tn.VerticalAlignment = VerticalAlignment.Center; sp.Children.Add(tn);
                 if (dd != null) { TextBlock tt = Text(Graus(dd.Temp) + "°", 13, p["SUB"]); tt.Margin = new Thickness(6, 0, 0, 0); tt.VerticalAlignment = VerticalAlignment.Center; sp.Children.Add(tt); }
                 b.Child = sp;
-                b.MouseLeftButtonUp += (s, e) => TriaLloc((int)((Border)s).Tag);
+                // Clic: mira el temps d'aquí. Arrossegar: canvia l'ordre (el primer és el principal, el de la barra).
+                b.PreviewMouseLeftButtonDown += PastillaAvall;
+                b.MouseMove += (s, e) => PastillaMou();
+                b.PreviewMouseLeftButtonUp += PastillaAmunt;
+                b.LostMouseCapture += (s, e) => { if (arrB == s) { arrB = null; if (arrMou) ActualitzaPastilles(); } };
                 ContextMenu cm = new ContextMenu();
                 cm.Style = (Style)g.W.FindResource(typeof(ContextMenu));
                 cm.Items.Add(ElementMenu(T("lloc-fes-principal"), "principal", i, i > 0));
@@ -529,6 +533,87 @@ namespace TempsBarra
             g.Pastilles.Children.Add(mes);
             g.Pastilles.UpdateLayout(); g.PastScroll.UpdateLayout();
             g.PastFletxes.Visibility = g.PastScroll.ScrollableWidth > 1 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        // ---------- Arrossegar les pastilles per endreçar els llocs ----------
+        static Border arrB;          // pastilla que s'arrossega
+        static int arrIdx;
+        static double arrX0;         // on s'ha premut (coordenades de la tira de pastilles)
+        static bool arrMou;          // ja s'ha mogut prou per ser un arrossegament
+        static System.Windows.Threading.DispatcherTimer arrTimer;
+
+        static void PastillaAvall(object s, MouseButtonEventArgs e)
+        {
+            arrB = (Border)s; arrIdx = (int)arrB.Tag; arrMou = false;
+            arrX0 = e.GetPosition(det.Pastilles).X;
+            arrB.CaptureMouse();
+            e.Handled = true;
+        }
+
+        static void PastillaMou()
+        {
+            if (arrB == null || Mouse.LeftButton != MouseButtonState.Pressed) return;
+            double dx = Mouse.GetPosition(det.Pastilles).X - arrX0;
+            if (!arrMou)
+            {
+                if (Math.Abs(dx) < 6) return;
+                arrMou = true;
+                arrB.Opacity = 0.85; Panel.SetZIndex(arrB, 10); arrB.Cursor = Cursors.SizeWE;
+                ToolTipService.SetIsEnabled(arrB, false);
+                if (arrTimer == null)
+                {
+                    // Si el ratolí és a la vora del carrusel, el carrusel es desplaça sol
+                    arrTimer = new System.Windows.Threading.DispatcherTimer();
+                    arrTimer.Interval = TimeSpan.FromMilliseconds(30);
+                    arrTimer.Tick += (s2, e2) =>
+                    {
+                        if (arrB == null || !arrMou) { arrTimer.Stop(); return; }
+                        ScrollViewer sv = det.PastScroll;
+                        double xs = Mouse.GetPosition(sv).X;
+                        if (xs < 30) sv.ScrollToHorizontalOffset(sv.HorizontalOffset - 10);
+                        else if (xs > sv.ViewportWidth - 30) sv.ScrollToHorizontalOffset(sv.HorizontalOffset + 10);
+                        else return;
+                        PastillaMou();
+                    };
+                }
+                arrTimer.Start();
+            }
+            arrB.RenderTransform = new TranslateTransform(dx, 0);
+        }
+
+        static void PastillaAmunt(object s, MouseButtonEventArgs e)
+        {
+            if (arrB == null || s != arrB) return;
+            Border b = arrB; int de = arrIdx; bool mogut = arrMou;
+            arrB = null;
+            if (arrTimer != null) arrTimer.Stop();
+            b.ReleaseMouseCapture();
+            e.Handled = true;
+            if (!mogut) { TriaLloc(de); return; }
+            // Nova posició: quantes pastilles queden a l'esquerra del centre de la que s'ha deixat anar
+            double centre = b.TranslatePoint(new Point(b.ActualWidth / 2, 0), det.Pastilles).X;
+            int a = 0;
+            foreach (UIElement c in det.Pastilles.Children)
+            {
+                Border o = c as Border;
+                if (o == null || o == b || !(o.Tag is int)) continue;
+                if (o.TranslatePoint(new Point(o.ActualWidth / 2, 0), det.Pastilles).X < centre) a++;
+            }
+            MouLloc(de, a);
+        }
+
+        static void MouLloc(int de, int a)
+        {
+            List<Dictionary<string, object>> ll = new List<Dictionary<string, object>>(Conf.Llocs);
+            if (de < 0 || de >= ll.Count || de == a) { ActualitzaPastilles(); return; }
+            Dictionary<string, object> vist = ll[Vist];
+            Dictionary<string, object> x = ll[de];
+            ll.RemoveAt(de); ll.Insert(Math.Min(a, ll.Count), x);
+            Conf.Llocs = ll;
+            Vist = Math.Max(0, ll.IndexOf(vist));
+            DesaConfig(Conf);
+            ActualitzaTemps(false);
+            MouDetall();
         }
 
         public static void TriaLloc(int i)

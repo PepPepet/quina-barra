@@ -185,7 +185,7 @@
 	"ara-font": "Bottom of the panel: data source. Open-Meteo is a proper name.",
 	"ara-font-models": "Bottom of the panel: data source; the temperature is the average of several weather models.\n\nParameters:\n* $1 - number of models (usually 3)",
 	"ara-sense-connexio": "Top of the panel when the data could not be downloaded: no connection, the widget will try again later.",
-	"lloc-ajuda": "Tooltip of a saved place «pill» at the top of the panel: click to see its weather, right click for options.",
+	"lloc-ajuda": "Tooltip of a saved place «pill» at the top of the panel: click to see its weather; drag it left or right to change the order (the first place is the main one, shown on the taskbar); right click for options.",
 	"lloc-principal": "Tooltip of the star icon on the main place, the one shown on the taskbar.",
 	"lloc-fes-principal": "Context menu item of a saved place: make it the main place (shown on the taskbar).",
 	"lloc-canvia-nom-menu": "Context menu item of a saved place: rename it (opens a dialog).",
