@@ -49,7 +49,7 @@ Un cop al dia mira si hi ha una versió nova. No la baixa ni la instal·la pel s
 ## Com es fa servir
 
 - **Clic** al giny: obre el panell. **Clic** a una rajola: n'obre el detall. Per tornar: la fletxa ←, la tecla Esc o el botó lateral «enrere» del ratolí.
-- **Pastilles de llocs**: un clic hi salta; **+ Afegeix** en desa un de nou; amb el **botó dret** el pots fer principal, canviar-li el nom, moure'l o treure'l. El principal (★) és el que surt a la barra.
+- **Pastilles de llocs**: un clic hi salta; **arrossega-les** per canviar-ne l'ordre (la primera és la principal); **+ Afegeix** en desa un de nou; amb el **botó dret** el pots fer principal, canviar-li el nom, moure'l o treure'l. El principal (★) és el que surt a la barra.
 - **Menú ⋯**: Configuració (llengua i blocs del panell), Quant a i Tanca el giny.
 
 ## Llengües
