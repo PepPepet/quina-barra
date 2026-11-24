@@ -363,6 +363,8 @@ namespace TempsBarra
         }
 
         // Secció «Llengua» de la pàgina Configuració
+        public static Func<ContextMenu> ObreMenuLlengues;   // el menú de llengües de Configuració (també per a /prova)
+
         static void SeccioLlengua()
         {
             Dictionary<string, string> p = det.P;
@@ -371,15 +373,15 @@ namespace TempsBarra
             spL.Children.Add(Text(T("llengua-titol"), 15, p["FG"], "SemiBold"));
             // Botó amb la llengua d'ara que obre un menú (amb els mateixos colors que la resta del giny)
             List<string> codis = new List<string> { null };
-            codis.AddRange(LlenguesDisponibles());
-            Func<string, string> nomOpcio = c => c == null ? T("llengua-windows") : NomLlengua(c);
+            codis.AddRange(LlenguesPerNom());   // en ordre alfabètic del nom de cada llengua
+            Func<string, string> nomOpcio = c => c == null ? T("llengua-windows") : NomLlenguaMenu(c);
             Button bL = new Button(); bL.Margin = new Thickness(0, 8, 0, 0); bL.HorizontalAlignment = HorizontalAlignment.Left; bL.MinWidth = 220;
             Grid contL = new Grid(); contL.ColumnDefinitions.Add(new ColumnDefinition()); contL.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             TextBlock txL = Text(nomOpcio(Conf.Llengua), 13.5, p["FG"]); txL.Margin = new Thickness(0, 0, 16, 0); contL.Children.Add(txL);
             TextBlock flL = Text(((char)0xE70D).ToString(), 11, p["SUB"]); flL.FontFamily = new FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets"); flL.VerticalAlignment = VerticalAlignment.Center;
             Grid.SetColumn(flL, 1); contL.Children.Add(flL);
             bL.Content = contL; bL.HorizontalContentAlignment = HorizontalAlignment.Stretch;
-            bL.Click += (s, e) =>
+            ObreMenuLlengues = () =>
             {
                 ContextMenu cm = new ContextMenu(); Direccio(cm);
                 cm.Style = (Style)det.W.FindResource(typeof(ContextMenu));
@@ -393,7 +395,9 @@ namespace TempsBarra
                 cm.Closed += (s2, e2) => { menuObert = false; if (det.W.IsVisible) det.W.Activate(); };
                 cm.PlacementTarget = bL; cm.Placement = PlacementMode.Bottom;
                 cm.IsOpen = true;
+                return cm;
             };
+            bL.Click += (s, e) => ObreMenuLlengues();
             spL.Children.Add(bL);
             // Nota de les traduccions fetes amb Claude: no surt en català (l'original d'en Pep) ni en anglès,
             // ni si la llengua no la té traduïda (llavors no se sap qui ha fet la traducció)

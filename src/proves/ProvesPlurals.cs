@@ -182,6 +182,11 @@ namespace TempsBarra
                 Igual(true, reals.Contains(c), "llengua disponible " + c);
             Igual(false, reals.Contains("qqq"), "qqq no és una llengua");
 
+            // Menú de llengües: ordre alfabètic del nom, amb la inicial en majúscula
+            Igual("Alguerés, Aragonés, Aranés, Asturianu, Català, English, Euskara, Galego, Occitan, Valencià",
+                string.Join(", ", G.LlenguesPerNom().Select(G.NomLlenguaMenu)), "menú de llengües");
+            Igual("català", G.NomLlengua("ca"), "al fitxer, el nom es queda en minúscula");
+
             // Un text que falta en valencià surt en català, i un que falta a totes, en anglès
             G.CarregaLlengua("ca-valencia");
             Igual(G.T("ara-font"), "Dades: Open-Meteo", "ca-valencia ara-font");

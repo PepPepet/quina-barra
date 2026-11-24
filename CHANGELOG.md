@@ -11,6 +11,7 @@ Ara també parla anglès i està preparat perquè la comunitat de [translatewiki
 - **Codis de llengua de MediaWiki** (els de translatewiki): el giny reconeix la llengua del Windows amb aquests codis (`ca-valencia`, `pt-br`, `zh-hans`, `zh-hant`, `sr-ec`, `ckb`...). El selector de Configuració mostra totes les llengües que porti l'exe i, si són moltes, el menú es desplaça.
 - **Plurals de totes les llengües:** `{{PLURAL}}` fa servir les regles de CLDR, les mateixes que MediaWiki (incloses les seves excepcions): àrab (sis formes), rus, polonès, txec, irlandès, gal·lès, bretó... Les comprova `src/proves/prova-plurals.ps1` amb els més de 13.000 exemples oficials.
 - **Llengües de dreta a esquerra** (àrab, hebreu, persa, urdú...): les finestres es giren, i la brúixola, la corba del sol, els gràfics per hores, les barres de temperatura, els indicadors, el mapa del radar i les icones es mantenen d'esquerra a dreta. Els números amb unitat (15 °C, 75%) no es desordenen.
+- El menú de llengües va per **ordre alfabètic** del nom de cada llengua (sense comptar accents), amb la inicial en majúscula com qualsevol opció de menú: Alguerés, Aragonés, Aranés, Asturianu, Català, English... Als fitxers, el nom es queda com l'escriu cada llengua (`català`, `English`).
 - Els números es formaten segons la llengua (en anglès, 0.4 m i 1,014 hPa).
 - `build.ps1 -Sortida <carpeta>` compila en una altra carpeta, per provar sense tancar el giny.
 - En català el giny es veu igual que la 1.1 (comprovat captura a captura).

@@ -253,6 +253,30 @@ namespace TempsBarra
             return codi;
         }
 
+        // Nom de la llengua per al menú: amb la inicial en majúscula, com qualsevol opció de menú i com fa el Windows
+        // («Català», «Galego», «English»). Als fitxers es queda com l'escriu cada llengua (en català, en minúscula).
+        public static string NomLlenguaMenu(string codi)
+        {
+            string n = NomLlengua(codi);
+            if (string.IsNullOrEmpty(n) || !char.IsLower(n[0])) return n;
+            CultureInfo ci;
+            try { ci = CultureInfo.GetCultureInfo(codi); } catch { ci = CultureInfo.InvariantCulture; }
+            return char.ToUpper(n[0], ci) + n.Substring(1);   // amb la cultura de la llengua (en turc, i → İ)
+        }
+
+        // Llengües per al menú, en ordre alfabètic del nom (sense tenir en compte accents ni majúscules)
+        public static List<string> LlenguesPerNom()
+        {
+            CompareInfo ci = CultureInfo.InvariantCulture.CompareInfo;
+            List<string> r = LlenguesDisponibles();
+            r.Sort((a, b) =>
+            {
+                int c = ci.Compare(NomLlengua(a), NomLlengua(b), CompareOptions.IgnoreCase | CompareOptions.IgnoreNonSpace);
+                return c != 0 ? c : string.CompareOrdinal(a, b);
+            });
+            return r;
+        }
+
         static void Assegura() { if (cadena == null) CarregaLlengua(Llengua); }
 
         public static bool TeText(string clau)
