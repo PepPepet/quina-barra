@@ -8,6 +8,8 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace TempsBarra
 {
@@ -158,13 +160,26 @@ namespace TempsBarra
             for (int i = 0; i < ordre.Count; i++)
             {
                 EstatBloc eb = ordre[i]; InfoBloc info = Info(eb.Id); int idx = i;
-                Grid fila = new Grid(); fila.Margin = new Thickness(0, i == 0 ? 0 : 4, 0, 0);
+                Grid fila = new Grid(); fila.Margin = new Thickness(0, i == 0 ? 0 : 4, 0, 0); fila.Tag = idx; fila.Background = Pinzell("#01000000");
+                fila.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 fila.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 fila.ColumnDefinitions.Add(new ColumnDefinition());
+
+                // Tres ratlles: s'arrossega la fila amunt o avall
+                Border nansa = new Border(); nansa.Background = Pinzell("#01000000"); nansa.Padding = new Thickness(2, 6, 12, 6); nansa.Cursor = Cursors.SizeNS;
+                nansa.VerticalAlignment = VerticalAlignment.Center; nansa.ToolTip = T("personalitza-arrossega");
+                TextBlock gl = Text(((char)0xE700).ToString(), 14, p["SUB"]); gl.FontFamily = new System.Windows.Media.FontFamily("Segoe Fluent Icons, Segoe MDL2 Assets");
+                nansa.Child = gl; fila.Children.Add(nansa);
+                Grid filaG = fila;
+                nansa.PreviewMouseLeftButtonDown += (s, e) => { filaArr = filaG; filaSp = sp; filaY0 = e.GetPosition(sp).Y; filaMou = false; filaG.CaptureMouse(); e.Handled = true; };
+                fila.MouseMove += (s, e) => FilaMou();
+                fila.PreviewMouseLeftButtonUp += (s, e) => { if (filaArr == s) { e.Handled = true; FilaAmunt(); } };
+                fila.LostMouseCapture += (s, e) => { if (filaArr == s) { filaArr = null; if (filaMou) MostraSubpagina("Personalitza"); } };
                 fila.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
                 fila.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
                 CheckBox chk = new CheckBox(); chk.IsChecked = eb.Visible; chk.VerticalAlignment = VerticalAlignment.Center; chk.Margin = new Thickness(0, 0, 10, 0);
+                Grid.SetColumn(chk, 1);
                 chk.ToolTip = eb.Visible ? T("personalitza-amaga") : T("personalitza-mostra");
                 string id = eb.Id;
                 bool calen = id == "Aire" || id == "Mar";
@@ -176,20 +191,74 @@ namespace TempsBarra
                 TextBlock tn = Text(T(info.Nom), 13.5, p["FG"], "SemiBold"); if (!eb.Visible) tn.Opacity = 0.5;
                 noms.Children.Add(tn);
                 noms.Children.Add(Text(info.Ample ? T("personalitza-ample") : T("personalitza-petita"), 11.5, p["SUB"]));
-                Grid.SetColumn(noms, 1); fila.Children.Add(noms);
+                Grid.SetColumn(noms, 2); fila.Children.Add(noms);
 
                 Button amunt = BotoGlif("", T("personalitza-puja")); amunt.IsEnabled = i > 0;
                 amunt.Click += (s, e) => CanviaBloc(o => { EstatBloc x = o[idx]; o.RemoveAt(idx); o.Insert(idx - 1, x); }, false);
-                Grid.SetColumn(amunt, 2); fila.Children.Add(amunt);
+                Grid.SetColumn(amunt, 3); fila.Children.Add(amunt);
                 Button avall = BotoGlif("", T("personalitza-baixa")); avall.IsEnabled = i < ordre.Count - 1;
                 avall.Click += (s, e) => CanviaBloc(o => { EstatBloc x = o[idx]; o.RemoveAt(idx); o.Insert(idx + 1, x); }, false);
-                Grid.SetColumn(avall, 3); fila.Children.Add(avall);
+                Grid.SetColumn(avall, 4); fila.Children.Add(avall);
                 sp.Children.Add(fila);
             }
             Button rest = new Button(); rest.Content = T("personalitza-restableix"); rest.Margin = new Thickness(4, 12, 4, 0);
             rest.HorizontalAlignment = HorizontalAlignment.Left;
             rest.Click += (s, e) => CanviaBloc(o => { o.Clear(); foreach (InfoBloc b in TotsBlocs) o.Add(new EstatBloc { Id = b.Id, Visible = true }); }, true);
             det.SubCos.Children.Add(rest);
+        }
+
+        // ---------- Arrossegar les files de «Personalitza el panell» ----------
+        static Grid filaArr; static StackPanel filaSp; static double filaY0; static bool filaMou;
+        static System.Windows.Threading.DispatcherTimer filaTimer;
+
+        static void FilaMou()
+        {
+            if (filaArr == null || Mouse.LeftButton != MouseButtonState.Pressed) return;
+            double dy = Mouse.GetPosition(filaSp).Y - filaY0;
+            if (!filaMou)
+            {
+                if (Math.Abs(dy) < 4) return;
+                filaMou = true;
+                filaArr.Opacity = 0.85; Panel.SetZIndex(filaArr, 10); filaArr.Background = Pinzell(det.P["HOVER"]);
+                if (filaTimer == null)
+                {
+                    // A prop de dalt o de baix, la pàgina es desplaça sola
+                    filaTimer = new System.Windows.Threading.DispatcherTimer();
+                    filaTimer.Interval = TimeSpan.FromMilliseconds(30);
+                    filaTimer.Tick += (s, e) =>
+                    {
+                        if (filaArr == null || !filaMou) { filaTimer.Stop(); return; }
+                        ScrollViewer sv = det.SubDesplaca;
+                        double ys = Mouse.GetPosition(sv).Y;
+                        if (ys < 30) sv.ScrollToVerticalOffset(sv.VerticalOffset - 10);
+                        else if (ys > sv.ViewportHeight - 30) sv.ScrollToVerticalOffset(sv.VerticalOffset + 10);
+                        else return;
+                        FilaMou();
+                    };
+                }
+                filaTimer.Start();
+            }
+            filaArr.RenderTransform = new TranslateTransform(0, dy);
+        }
+
+        static void FilaAmunt()
+        {
+            Grid f = filaArr; bool mogut = filaMou; StackPanel sp = filaSp;
+            filaArr = null;
+            if (filaTimer != null) filaTimer.Stop();
+            f.ReleaseMouseCapture();
+            if (!mogut) return;
+            int de = (int)f.Tag;
+            double centre = f.TranslatePoint(new Point(0, f.ActualHeight / 2), sp).Y;
+            int a = 0;
+            foreach (UIElement c in sp.Children)
+            {
+                Grid o = c as Grid;
+                if (o == null || o == f || !(o.Tag is int)) continue;
+                if (o.TranslatePoint(new Point(0, o.ActualHeight / 2), sp).Y < centre) a++;
+            }
+            if (a == de) { MostraSubpagina("Personalitza"); return; }
+            CanviaBloc(o => { EstatBloc x = o[de]; o.RemoveAt(de); o.Insert(Math.Min(a, o.Count), x); }, false);
         }
 
         static Button BotoGlif(string glif, string ajuda)

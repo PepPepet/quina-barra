@@ -52,6 +52,7 @@
 	"personalitza-petita": "Small note under a block name: this block is a small tile (two per row).",
 	"personalitza-puja": "Tooltip of the up-arrow button: moves the block one position up.",
 	"personalitza-baixa": "Tooltip of the down-arrow button: moves the block one position down.",
+	"personalitza-arrossega": "Tooltip of the drag handle (three horizontal lines) at the left of each block in the «Customize the panel» list: drag it up or down to change the order of the blocks.",
 	"personalitza-restableix": "Button: shows all blocks again in the original order.",
 	"estat-0": "Weather condition (WMO code 0): clear sky. Shown on the taskbar widget and at the top of the panel; keep it short.",
 	"estat-1": "Weather condition (WMO code 1): mainly clear.",
